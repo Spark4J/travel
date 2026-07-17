@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏖️ 海南6天国庆旅行攻略 | 三亚 → 海口</title>
+    <style>
+        :root {
+            --primary: #0ea5e9;
+            --primary-dark: #0284c7;
+            --secondary: #f59e0b;
+            --accent: #06b6d4;
+            --bg: #f0f9ff;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+            --shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.12);
+            --radius: 16px;
+            --radius-sm: 10px;
+            --gradient-sun: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #ea580c 100%);
+            --gradient-sea: linear-gradient(135deg, #06b6d4 0%, #0ea5e9 50%, #3b82f6 100%);
+            --gradient-sand: linear-gradient(135deg, #fef3c7 0%, #fde68a 50%, #fcd34d 100%);
+            --gradient-card: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* 顶部横幅 */
+        .hero {
+            position: relative;
+            background: linear-gradient(135deg, #0c4a6e 0%, #0369a1 30%, #0891b2 60%, #06b6d4 100%);
+            padding: 60px 20px 80px;
+            text-align: center;
+            overflow: hidden;
+            clip-path: ellipse(150% 100% at 50% 0%);
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(ellipse at 30% 70%, rgba(251, 191, 36, 0.15) 0%, transparent 50%),
+                        radial-gradient(ellipse at 70% 30%, rgba(6, 182, 212, 0.2) 0%, transparent 50%);
+            animation: heroFloat 8s ease-in-out infinite;
+        }
+        @keyframes heroFloat {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(20px, -20px); }
+        }
+        .hero-content { position: relative; z-index: 1; }
+        .hero h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 800;
+            color: #fff;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            margin-bottom: 12px;
+        }
+        .hero .subtitle {
+            font-size: 1.2rem;
+            color: rgba(255,255,255,0.9);
+            font-weight: 400;
+        }
+        .hero .date-badge {
+            display: inline-block;
+            margin-top: 16px;
+            padding: 8px 24px;
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 50px;
+            color: #fff;
+            font-size: 0.95rem;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        /* 天气概览 */
+        .weather-strip {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            flex-wrap: wrap;
+            margin: -40px 20px 40px;
+            position: relative;
+            z-index: 2;
+        }
+        .weather-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 20px 28px;
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+            min-width: 140px;
+            transition: transform 0.3s;
+        }
+        .weather-card:hover { transform: translateY(-4px); }
+        .weather-card .city { font-weight: 700; font-size: 1.1rem; color: var(--text); }
+        .weather-card .temp { font-size: 2.2rem; font-weight: 800; color: var(--primary); margin: 8px 0; }
+        .weather-card .desc { font-size: 0.85rem; color: var(--text-light); }
+        .weather-card .icon { font-size: 2rem; margin-bottom: 4px; }
+
+        /* 主布局 */
+        .container { max-width: 1300px; margin: 0 auto; padding: 0 20px; }
+
+        /* 双栏布局 */
+        .layout { display: flex; gap: 32px; margin-bottom: 40px; }
+        .sidebar { flex: 0 0 420px; }
+        .main-content { flex: 1; min-width: 0; }
+
+        @media (max-width: 1024px) {
+            .layout { flex-direction: column; }
+            .sidebar { flex: none; }
+        }
+
+        /* 地图容器 */
+        .map-wrapper {
+            position: sticky;
+            top: 20px;
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+        .map-wrapper .map-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+        }
+        #map {
+            width: 100%;
+            height: 500px;
+        }
+        .map-legend {
+            padding: 12px 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+        .legend-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 4px;
+        }
+
+        /* 行程卡片 */
+        .day-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 24px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid var(--border);
+        }
+        .day-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        .day-header {
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+        }
+        .day-number {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #fff;
+            flex-shrink: 0;
+        }
+        .day-info { flex: 1; }
+        .day-info h3 { font-size: 1.15rem; font-weight: 700; }
+        .day-info .day-date { font-size: 0.85rem; color: var(--text-light); margin-top: 2px; }
+        .day-route { font-size: 0.8rem; color: var(--text-light); margin-top: 2px; }
+
+        .day-body { padding: 20px 24px; }
+
+        /* 景点卡片 */
+        .spot-list { display: flex; flex-direction: column; gap: 16px; }
+        .spot-card {
+            display: flex;
+            gap: 16px;
+            padding: 16px;
+            background: var(--gradient-card);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .spot-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 4px 16px rgba(14, 165, 233, 0.15);
+        }
+        .spot-card.active {
+            border-color: var(--primary);
+            background: linear-gradient(145deg, #f0f9ff 0%, #e0f2fe 100%);
+            box-shadow: 0 4px 16px rgba(14, 165, 233, 0.2);
+        }
+        .spot-img {
+            width: 120px;
+            height: 90px;
+            border-radius: 8px;
+            object-fit: cover;
+            flex-shrink: 0;
+            background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+        }
+        .spot-info { flex: 1; min-width: 0; }
+        .spot-info h4 { font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
+        .spot-info .spot-meta {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+        .spot-info .spot-meta span { display: flex; align-items: center; gap: 3px; }
+        .spot-info .spot-desc {
+            font-size: 0.82rem;
+            color: var(--text-light);
+            margin-top: 6px;
+            line-height: 1.5;
+        }
+        .spot-rating {
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+            background: #fef3c7;
+            color: #92400e;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .spot-level {
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+            background: #e0f2fe;
+            color: #0369a1;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .spot-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .btn-taxi {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 14px;
+            background: var(--gradient-sea);
+            color: #fff;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 600;
+            white-space: nowrap;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-taxi:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(6, 182, 212, 0.4);
+        }
+        .btn-taxi.small {
+            padding: 6px 12px;
+            font-size: 0.75rem;
+        }
+        .btn-nav {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 14px;
+            background: #fff;
+            color: var(--primary);
+            border: 1.5px solid var(--primary);
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 600;
+            white-space: nowrap;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .btn-nav:hover {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        /* 交通信息 */
+        .transit-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            margin: 8px 0;
+            background: #f8fafc;
+            border-radius: 10px;
+            border: 1px dashed var(--border);
+            font-size: 0.82rem;
+            color: var(--text-light);
+        }
+        .transit-arrow { color: var(--primary); font-weight: 700; font-size: 1.2rem; }
+        .transit-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--primary);
+            flex-shrink: 0;
+        }
+
+        /* 全览按钮 */
+        .toolbar {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+        }
+        .btn-toolbar {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            text-decoration: none;
+        }
+        .btn-primary {
+            background: var(--gradient-sea);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(6, 182, 212, 0.4);
+        }
+        .btn-outline {
+            background: #fff;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+        .btn-outline:hover {
+            background: var(--primary);
+            color: #fff;
+        }
+        .btn-gold {
+            background: var(--gradient-sun);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+        }
+        .btn-gold:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+        }
+
+        /* 页脚 */
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-light);
+            font-size: 0.85rem;
+        }
+
+        /* 平滑滚动 */
+        html { scroll-behavior: smooth; }
+
+        /* 提示条 */
+        .tips-bar {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-radius: var(--radius);
+            padding: 16px 24px;
+            margin-bottom: 24px;
+            border: 1px solid #fcd34d;
+            font-size: 0.9rem;
+            color: #92400e;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        .tips-bar .icon { font-size: 1.3rem; flex-shrink: 0; }
+
+        /* 加载动画 */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 500px;
+            color: var(--text-light);
+        }
+        .loading::after {
+            content: '';
+            width: 30px;
+            height: 30px;
+            border: 3px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-left: 10px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* 自适应 */
+        @media (max-width: 768px) {
+            .spot-card { flex-direction: column; }
+            .spot-img { width: 100%; height: 160px; }
+            .spot-actions { flex-direction: row; }
+            .hero { padding: 40px 16px 60px; }
+            .weather-strip { margin: -30px 12px 30px; }
+            .weather-card { min-width: 100px; padding: 14px 18px; }
+            .weather-card .temp { font-size: 1.6rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- 顶部横幅 -->
+<header class="hero">
+    <div class="hero-content">
+        <h1>🌴 海南6天国庆旅行攻略</h1>
+        <p class="subtitle">三亚进 · 海口出 | 环岛东线经典路线</p>
+        <div class="date-badge">📅 2026年10月1日 — 10月6日</div>
+    </div>
+</header>
+
+<!-- 天气概览 -->
+<div class="weather-strip">
+    <div class="weather-card">
+        <div class="icon">☀️</div>
+        <div class="city">三亚</div>
+        <div class="temp">28°~33°</div>
+        <div class="desc">多云 · 适宜出行</div>
+    </div>
+    <div class="weather-card">
+        <div class="icon">⛅</div>
+        <div class="city">万宁</div>
+        <div class="temp">27°~33°</div>
+        <div class="desc">多云 · 温暖舒适</div>
+    </div>
+    <div class="weather-card">
+        <div class="icon">🌤️</div>
+        <div class="city">海口</div>
+        <div class="temp">27°~35°</div>
+        <div class="desc">多云 · 晴好天气</div>
+    </div>
+</div>
+
+<div class="container">
+    <!-- 工具栏 -->
+    <div class="toolbar">
+        <a href="https://uri.amap.com/navigation?from=&to=&mode=car&callnative=1" class="btn-toolbar btn-gold" target="_blank">
+            📱 在高德地图中打开全路线
+        </a>
+        <button class="btn-toolbar btn-primary" onclick="fitAllMarkers()">🗺️ 查看全部景点</button>
+        <button class="btn-toolbar btn-outline" onclick="scrollToDay(1)">📋 查看详细行程</button>
+    </div>
+
+    <!-- 提示 -->
+    <div class="tips-bar">
+        <span class="icon">💡</span>
+        <div>
+            <strong>国庆出行提示：</strong>国庆期间海南天气以多云为主，气温28-35°C，适合海岛游玩。建议提前预订机票和酒店，热门景点尽早前往。同一天行程景区之间可选择<strong>打车</strong>出行，点击各景点的"🚕 打车"按钮即可唤起高德地图打车。
+        </div>
+    </div>
+
+    <!-- 双栏布局 -->
+    <div class="layout">
+        <!-- 左侧：地图 -->
+        <aside class="sidebar">
+            <div class="map-wrapper">
+                <div class="map-header">🗺️ 旅行路线地图</div>
+                <div id="map"><div class="loading">地图加载中</div></div>
+                <div class="map-legend">
+                    <span><span class="legend-dot" style="background:#ef4444;"></span> Day1</span>
+                    <span><span class="legend-dot" style="background:#f59e0b;"></span> Day2</span>
+                    <span><span class="legend-dot" style="background:#10b981;"></span> Day3</span>
+                    <span><span class="legend-dot" style="background:#3b82f6;"></span> Day4</span>
+                    <span><span class="legend-dot" style="background:#8b5cf6;"></span> Day5</span>
+                    <span><span class="legend-dot" style="background:#ec4899;"></span> Day6</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- 右侧：行程 -->
+        <main class="main-content" id="itinerary">
+            <!-- Day 1 -->
+            <div class="day-card" id="day1">
+                <div class="day-header" onclick="focusDay(0)">
+                    <div class="day-number" style="background: var(--gradient-sea);">1</div>
+                    <div class="day-info">
+                        <h3>抵达三亚 · 椰梦长廊日落</h3>
+                        <div class="day-date">10月1日 周四 | 三亚</div>
+                        <div class="day-route">✈️ 三亚凤凰国际机场 → 🌅 椰梦长廊</div>
+                    </div>
+                </div>
+                <div class="day-body">
+                    <div class="spot-list">
+                        <div class="spot-card" data-spot="airport-sy" onclick="focusSpot('airport-sy')">
+                            <img class="spot-img" src="https://store.is.autonavi.com/showpic/c50d92854f6fc3fb71b1b3db95bbae7e" alt="三亚凤凰国际机场" onerror="this.style.background='linear-gradient(135deg, #e0f2fe, #bae6fd)'">
+                            <div class="spot-info">
+                                <h4>✈️ 三亚凤凰国际机场 (SYX)</h4>
+                                <div class="spot-meta">
+                                    <span>📍 三亚市凤凰镇</span>
+                                </div>
+                                <div class="spot-desc">抵达三亚，建议选择上午航班，下午即可开始游玩。机场距三亚湾仅约15分钟车程。</div>
+                            </div>
+                        </div>
+                        <div class="transit-info">
+                            <span class="transit-dot"></span> 打车约15分钟 · 约8公里 <span class="transit-arrow">→</span>
+                        </div>
+                        <div class="spot-card" data-spot="yemeng" onclick="focusSpot('yemeng')">
+                            <img class="spot-img" src="http://store.is.autonavi.com/showpic/3ae8064ee9eea0c147507e1f51702b35" alt="椰梦长廊" onerror="this.style.background='linear-gradient(135deg, #fef3c7, #fde68a)'">
+                            <div class="spot-info">
+                                <h4>🌅 椰梦长廊</h4>
+                                <div class="spot-meta">
+                                    <span class="spot-rating">⭐ 4.9</span>
+                                    <span>📍 三亚湾路116号</span>
+                                    <span>🕐 24小时开放</span>
+                                </div>
+                                <div class="spot-desc">三亚湾滨海大道，绵延20公里的椰林沙滩。傍晚时分金色落日洒在海面上，是三亚最美的日落观赏地。免费开放，适合散步、骑行、拍照。</div>
+                            </div>
+                            <div class="spot-actions">
+                                <a href="https://uri.amap.com/navigation?to=109.475754,18.274342&mode=car&callnative=1" class="btn-taxi" target="_blank">🚕 打车前往</a>
+                                <a href="https://uri.amap.com/navigation?to=109.475754,18.274342&mode=car&callnative=1" class="btn-nav" target="_blank">🧭 导航</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Day 2 -->
+            <div class="day-card" id="day2">
+                <div class="day-header" onclick="focusDay(1)">
+                    <div class="day-number" style="background: var(--gradient-sun);">2</div>
+                    <div class="day-info">
+                        <h3>南山礼佛 · 天涯海角</h3>
+                        <div class="day-date">10月2日 周五 | 三亚</div>
+                        <div class="day-route">🙏 南山文化旅游区 → 🪨 天涯海角游览区</div>
+                    </div>
+                </div>
+                <div class="day-body">
+                    <div class="spot-list">
+                        <div class="spot-card" data-spot="nanshan" onclick="focusSpot('nanshan')">
+                            <img class="spot-img" src="http://store.is.autonavi.com/showpic/4e6f68323f2bc80f42d4939a250b6258" alt="南山文化旅游区" onerror="this.style.background='linear-gradient(135deg, #e0f2fe, #bae6fd)'">
+                            <div class="spot-info">
+                                <h4>🙏 三亚南山文化旅游区</h4>
+                                <div class="spot-meta">
+                                    <span class="spot-rating">⭐ 4.7</span>
+                                    <span class="spot-level">5A景区</span>
+                                    <span>🕐 08:00-17:00</span>
+                                </div>
+                                <div class="spot-desc">中国最南端的佛教道场，108米高的南海观音像矗立海上，气势恢宏。建议上午8点到达，避开人流高峰。游览约3-4小时。</div>
+                            </div>
+                            <div class="spot-actions">
+                                <a href="https://uri.amap.com/navigation?to=109.208349,18.298366&mode=car&callnative=1" class="btn-taxi" target="_blank">🚕 打车前往</a>
+                                <a href="https://uri.amap.com/navigation?to=109.208349,18.298366&mode=car&callnative=1" class="btn-nav" target="_blank">🧭 导航</a>
+                            </div>
+                        </div>
+                        <div class="transit-info">
+                            <span class="transit-dot"></span> 打车约28分钟 · 约21公里 <span class="transit-arrow">→</span>
+                            <a href="https://uri.amap.com/taxi?to=109.348143,18.294988&callnative=1" class="btn-taxi small" target="_blank">🚕 打车到天涯海角</a>
+                        </div>
+                        <div class="spot-card" data-spot="tianya" onclick="focusSpot('tianya')">
+                            <img class="spot-img" src="http://store.is.autonavi.com/showpic/a73b1b6e8914654c9b83d5a8d0518a3b" alt="天涯海角游览区" onerror="this.style.background='linear-gradient(135deg, #fef3c7, #fde68a)'">
+                            <div class="spot-info">
+                                <h4>🪨 天涯海角游览区</h4>
+                                <div class="spot-meta">
+                                    <span class="spot-rating">⭐ 4.8</span>
+                                    <span class="spot-level">4A景区</span>
+                                    <span>🕐 08:00-18:00</span>
+                                </div>
+                                <div class="spot-desc">"天涯""海角"巨石矗立海滩，是三亚标志性景点。碧海蓝天配上奇石林立，适合下午游览拍照。建议游玩2-3小时。</div>
+                            </div>
+                            <div class="spot-actions">
+                                <a href="https://uri.amap.com/navigation?to=109.348143,18.294988&mode=car&callnative=1" class="btn-taxi" target="_blank">🚕 打车前往</a>
+                                <a href="https://uri.amap.com/navigation?to=109.348143,18.294988&mode=car&callnative=1" class="btn-nav" target="_blank">🧭 导航</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Day 3 -->
+            <div class="day-card" id="day3">
+                <div class="day-header" onclick="focusDay(2)">
+                    <div class="day-number" style="background: linear-gradient(135deg, #10b981, #059669);">3</div>
+                    <div class="day-info">
+                        <h3>热带雨林 · 亚龙湾 · 大东海</h3>
+                        <div class="day-date">10月3日 周六 | 三亚</div>
+                        <div class="day-route">🌳 亚龙湾热带天堂森林公园 → 🏖️ 亚龙湾 → 🌊 大东海</div>
+                    </div>
+                </div>
+                <div class="day-body">
+                    <div class="spot-list">
+                        <div class="spot-card" data-spot="forest-park" onclick="focusSpot('forest-park')">
+                            <img class="spot-img" src="http://store.is.autonavi.com/showpic/09e822ba5b1a7ab5423832a38980476c" alt="亚龙湾热带天堂森林公园" onerror="this.style.background='linear-gradient(135deg, #dcfce7, #bbf7d0)'">
+                            <div class="spot-info">
+                                <h4>🌳 亚龙湾热带天堂森林公园</h4>
+                                <div class="spot-meta">
+                                    <span class="spot-rating">⭐ 4.6</span>
+                                    <span class="spot-level">4A景区</span>
+                                    <span>🕐 08:00-18:00</span>
+                                </div>
+                                <div class="spot-desc">电影《非诚勿扰2》取景地，过江龙索桥和全海景玻璃栈道是必打卡点。登顶可俯瞰整个亚龙湾，视野极佳。建议上午前往，游玩3-4小时。</div>
+                            </div>
+                            <div class="spot-actions">
+                                <a href="https://uri.amap.com/navigation?to=109.643059,18.253643&mode=car&callnative=1" class="btn-taxi" target="_blank">🚕 打车前往</a>
+                                <a href="https://uri.amap.com/navigation?to=109.643059,18.253643&mode=car&callnative=1" class="btn-nav" target="_blank">🧭 导航</a>
+                            </div>
+                        </div>
+                        <div class="transit-info">
+                            <span class="transit-dot"></span> 打车约15分钟 · 约5.3公里 <span class="transit-arrow">→</span>
+                            <a href="https://uri.amap.com/taxi?to=109.649664,18.235582&callnative=1" class="btn-taxi small" target="_blank">🚕 打车到亚龙湾</a>
+                        </div>
+                        <div class="spot-card" data-spot="yalong" onclick="focusSpot('yalong')">
+                            <img class="spot-img" src="http://aos-cdn-image.amap.com/sns/ugccomment/a8a27a93-ae69-4bd2-97cf-5f92f4a07119.jpg" alt="亚龙湾" onerror="this.style.background='linear-gradient(135deg, #e0f2fe, #bae6fd)'">
+                            <div class="spot-info">
+                                <h4>🏖️ 亚龙湾国家旅游度假区</h4>
+                                <div class="spot-meta">
+                                    <span class="spot-rating">⭐ 4.8</span>
+                                    <span class="spot-level">4A景区</span>
+                                    <span>🕐 全天开放</span>
+                                </div>
+                                <div class="spot-desc">"天下第一湾"，沙质洁白细腻，海水清澈湛蓝。下午在这里游泳、晒太阳、玩水上项目。游玩2-3小时。</div>
+                            </div>
+                            <div class="spot-actions">
+                                <a href="https://uri.amap.com/navigation?to=109.649664,18.235582&mode=car&callnative=1" class="btn-taxi" target="_blank">🚕 打车前往</a>
+                                <a href="https://uri.amap.com/navigation?to=109.649664,18.235582&mode=car&callnative=1" class="btn-nav" target="_blank">🧭 导航</a>
+                            </div>
+                        </div>
+                        <div class="transit-info">
+                            <span class="transit-dot"></span> 打车约35分钟 · 约20.8公里 <span class="transit-arrow">→</span>
+                            <a href="https://uri.amap.com/taxi?to=109.522212,18.220820&callnative=1" class="btn-taxi small" target="_blank">🚕 打车到大东海</a>
+                        </div>
+                        <div class="spot-card" data-spot="dadonghai" onclick="focusSpot('dadonghai')">
+                            <img class="spot-img" src="http://store.is.autonavi.com/showpic/d13e9b08dd3a19359b1102934dc08782" alt="大东海旅游区" onerror="this.style.background='linear-gradient(135deg, #fef3c7, #fde68a)'">
+                            <div class="spot-info">
+                                <h4>🌊 大东海旅游区</h4>
+                                <div class="spot-meta">
+                                    <span class="spot-rating">⭐ 4.8</span>
+                                    <span>🕐 全天开放（游泳区 09:00-18:00）</span>
+                                </div>
+                                <div class="spot-desc">三亚市区最近的海滩，周边餐饮娱乐设施完善。傍晚在沙滩酒吧享受海风，结束充实的一天。</div>
+                            </div>
+                            <div class="spot-actions">
+                                <a href="https://uri.amap.com/navigation?to=109.522212,18.220820&mode=car&callnative=1" class="btn-taxi" target="_blank">🚕 打车前往</a>
+                                <a href="https://uri.amap.com/navigation?to=109.522212,18.220820&mode=car&callnative=1" class="btn-nav" target="_blank">🧭 导航</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Day 4 -->
+            <div class="day-card" id="day4">
+                <div class="day-header" onclick="focusDay(3)">
+                    <div class="day-number" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">4</div>
+                    <div class="day-info">
+                        <h3>蜈支洲岛 · 海岛秘境</h3>
+                        <div class="day-date">10月4日 周日 | 三亚</div>
+                        <div class="day-route">🏝️ 蜈支洲岛旅游风景区（全天）</div>
+                    </div>
+                </div>
+                <div class="day-body">
+                    <div class="spot-list">
+                        <div class="spot-card" data-spot="wuzhizhou" onclick="focusSpot('wuzhizhou')">
+                            <img class="spot-img" src="https://store.is.autonavi.com/showpic/FB987A825D3C460684E009C9487D6AB8" alt="蜈支洲岛" onerror="this.style.background='linear-gradient(135deg, #dbeafe, #bfdbfe)'">
+                            <div class="spot-info">
+                                <h4>🏝️ 蜈支洲岛旅游风景区</h4>
+                                <div class="spot-meta">
+                                    <span class="spot-rating">⭐ 4.8</span>
+                                    <span class="spot-level">5A景区</span>
+                                    <span>🕐 08:30-19:30</span>
+                                </div>
+                                <div class="spot-desc">中国的"马尔代夫"，海水能见度高达27米，是潜水爱好者的天堂。需乘船上岛（约20分钟），岛上可体验潜水、摩托艇、拖伞等水上项目。建议预留一整天。</div>
+                            </div>
+                            <div class="spot-actions">
+                                <a href="https://uri.amap.com/navigation?to=109.765947,18.310381&mode=car&callnative=1" class="btn-taxi" target="_blank">🚕 打车前往</a>
+                                <a href="https://uri.amap.com/navigation?to=109.765947,18.310381&mode=car&callnative=1" class="btn-nav" target="_blank">🧭 导航</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tips-bar" style="margin-top:12px; margin-bottom:0;">
+                        <span class="icon">⚠️</span>
+                        <div><strong>上岛提醒：</strong>上岛末班船16:00，下岛末班船19:30。建议早上8:30前到达码头，节假日排队人多。潜水项目16:30截止检票。</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Day 5 -->
+            <div class="day-card" id="day5">
+                <div class="day-header" onclick="focusDay(4)">
+                    <div class="day-number" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">5</div>
+                    <div class="day-info">
+                        <h3>北上万宁 · 石梅湾</h3>
+                        <div class="day-date">10月5日 周一 | 三亚 → 万宁 → 海口</div>
+                        <div class="day-route">🚗 三亚出发 → 🏖️ 石梅湾 → 🏨 海口入住</div>
+                    </div>
+                </div>
+                <div class="day-body">
+                    <div class="spot-list">
+                        <div class="spot-card" data-spot="shimei" onclick="focusSpot('shimei')">
+                            <img class="spot-img" src="http://store.is.autonavi.com/showpic/577ef5bd0e3a1e6affeb5ec66233a1d0" alt="石梅湾" onerror="this.style.background='linear-gradient(135deg, #ede9fe, #ddd6fe)'">
+                            <div class="spot-info">
+                                <h4>🏖️ 万宁石梅湾</h4>
+                                <div class="spot-meta">
+                                    <span class="spot-rating">⭐ 4.8</span>
+                                    <span>🕐 全天开放</span>
+                                </div>
+                                <div class="spot-desc">海南最美海湾之一，未被过度开发，保留了原始海滩的宁静。白沙碧水，适合冲浪和拍照。上午从三亚出发，沿海南环岛高速北上约1.5小时可达。游玩后继续前往海口（约2小时车程）。</div>
+                            </div>
+                            <div class="spot-actions">
+                                <a href="https://uri.amap.com/navigation?to=110.272090,18.661922&mode=car&callnative=1" class="btn-taxi" target="_blank">🚕 打车前往</a>
+                                <a href="https://uri.amap.com/navigation?to=110.272090,18.661922&mode=car&callnative=1" class="btn-nav" target="_blank">🧭 导航</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tips-bar" style="margin-top:12px; margin-bottom:0;">
+                        <span class="icon">💡</span>
+                        <div><strong>交通建议：</strong>三亚到石梅湾约100公里，可选择租车自驾（推荐）或打车。石梅湾到海口约150公里，全程高速约2小时。当晚入住海口酒店。</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Day 6 -->
+            <div class="day-card" id="day6">
+                <div class="day-header" onclick="focusDay(5)">
+                    <div class="day-number" style="background: linear-gradient(135deg, #ec4899, #db2777);">6</div>
+                    <div class="day-info">
+                        <h3>海口风情 · 返程</h3>
+                        <div class="day-date">10月6日 周二 | 海口</div>
+                        <div class="day-route">🏛️ 骑楼老街 → 🏖️ 假日海滩 → ✈️ 海口美兰机场</div>
+                    </div>
+                </div>
+                <div class="day-body">
+                    <div class="spot-list">
+                        <div class="spot-card" data-spot="qilou" onclick="focusSpot('qilou')">
+                            <img class="spot-img" src="http://store.is.autonavi.com/showpic/b9212de14160f02edc6889146d749cdd" alt="海口骑楼老街" onerror="this.style.background='linear-gradient(135deg, #fce7f3, #fbcfe8)'">
+                            <div class="spot-info">
+                                <h4>🏛️ 海口骑楼老街历史文化街区</h4>
+                                <div class="spot-meta">
+                                    <span class="spot-rating">⭐ 4.9</span>
+                                    <span class="spot-level">3A景区</span>
+                                    <span>🕐 09:00-20:00</span>
+                                </div>
+                                <div class="spot-desc">百年南洋风情骑楼建筑群，是海口最具历史韵味的街区。上午漫步老街，品尝地道海南粉、清补凉，感受海口慢生活。游览约2-3小时。</div>
+                            </div>
+                            <div class="spot-actions">
+                                <a href="https://uri.amap.com/navigation?to=110.344604,20.039708&mode=car&callnative=1" class="btn-taxi" target="_blank">🚕 打车前往</a>
+                                <a href="https://uri.amap.com/navigation?to=110.344604,20.039708&mode=car&callnative=1" class="btn-nav" target="_blank">🧭 导航</a>
+                            </div>
+                        </div>
+                        <div class="transit-info">
+                            <span class="transit-dot"></span> 打车约25分钟 · 约13.2公里 <span class="transit-arrow">→</span>
+                            <a href="https://uri.amap.com/taxi?to=110.237188,20.036599&callnative=1" class="btn-taxi small" target="_blank">🚕 打车到假日海滩</a>
+                        </div>
+                        <div class="spot-card" data-spot="jiari" onclick="focusSpot('jiari')">
+                            <img class="spot-img" src="http://store.is.autonavi.com/showpic/21be28b00bb31d4265a0d3bb2ea9a028" alt="假日海滩" onerror="this.style.background='linear-gradient(135deg, #fef3c7, #fde68a)'">
+                            <div class="spot-info">
+                                <h4>🏖️ 假日海滩旅游区</h4>
+                                <div class="spot-meta">
+                                    <span class="spot-rating">⭐ 4.7</span>
+                                    <span class="spot-level">4A景区</span>
+                                    <span>🕐 09:30-22:00</span>
+                                </div>
+                                <div class="spot-desc">海口最大的海滨浴场，椰林成片，沙滩开阔。下午在此享受最后的海南阳光，然后前往美兰机场，结束愉快的海南之旅。</div>
+                            </div>
+                            <div class="spot-actions">
+                                <a href="https://uri.amap.com/navigation?to=110.237188,20.036599&mode=car&callnative=1" class="btn-taxi" target="_blank">🚕 打车前往</a>
+                                <a href="https://uri.amap.com/navigation?to=110.237188,20.036599&mode=car&callnative=1" class="btn-nav" target="_blank">🧭 导航</a>
+                            </div>
+                        </div>
+                        <div class="transit-info">
+                            <span class="transit-dot"></span> 打车约45分钟 · 约35公里 <span class="transit-arrow">→</span>
+                            <a href="https://uri.amap.com/taxi?to=110.467385,19.942495&callnative=1" class="btn-taxi small" target="_blank">🚕 打车到美兰机场</a>
+                        </div>
+                        <div class="spot-card" data-spot="airport-hk" onclick="focusSpot('airport-hk')">
+                            <img class="spot-img" src="http://store.is.autonavi.com/showpic/793b7c2e7908733872f8ccb0458ec81c" alt="海口美兰国际机场" onerror="this.style.background='linear-gradient(135deg, #e0f2fe, #bae6fd)'">
+                            <div class="spot-info">
+                                <h4>✈️ 海口美兰国际机场 (HAK)</h4>
+                                <div class="spot-meta">
+                                    <span>📍 海口市美兰区</span>
+                                </div>
+                                <div class="spot-desc">建议选择傍晚或晚上的航班返程，给最后一天留出充足的游玩时间。美兰机场免税店可购买离岛免税商品。</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<footer class="footer">
+    <p>🏖️ 海南6天国庆旅行攻略 | 数据来源：高德地图 | 路线：三亚 → 万宁 → 海口</p>
+    <p style="margin-top:4px;">景点间打车请使用高德地图APP扫码或点击"打车"按钮</p>
+</footer>
+
+<script>
+    window._AMapSecurityConfig = { securityJsCode: 'ca4b0e2c5cd68996aeb1a1646ace8283' };
+
+    var map = null;
+    var markers = [];
+    var polylines = [];
+    var dayColors = ['#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6', '#ec4899'];
+
+    var spotData = {
+        'airport-sy': { name: '三亚凤凰国际机场', lng: 109.414038, lat: 18.303410, day: 0, icon: '✈️' },
+        'yemeng': { name: '椰梦长廊', lng: 109.475754, lat: 18.274342, day: 0, icon: '🌅' },
+        'nanshan': { name: '南山文化旅游区', lng: 109.208349, lat: 18.298366, day: 1, icon: '🙏' },
+        'tianya': { name: '天涯海角游览区', lng: 109.348143, lat: 18.294988, day: 1, icon: '🪨' },
+        'forest-park': { name: '亚龙湾热带天堂森林公园', lng: 109.643059, lat: 18.253643, day: 2, icon: '🌳' },
+        'yalong': { name: '亚龙湾国家旅游度假区', lng: 109.649664, lat: 18.235582, day: 2, icon: '🏖️' },
+        'dadonghai': { name: '大东海旅游区', lng: 109.522212, lat: 18.220820, day: 2, icon: '🌊' },
+        'wuzhizhou': { name: '蜈支洲岛旅游风景区', lng: 109.765947, lat: 18.310381, day: 3, icon: '🏝️' },
+        'shimei': { name: '万宁石梅湾', lng: 110.272090, lat: 18.661922, day: 4, icon: '🏖️' },
+        'qilou': { name: '海口骑楼老街', lng: 110.344604, lat: 20.039708, day: 5, icon: '🏛️' },
+        'jiari': { name: '假日海滩', lng: 110.237188, lat: 20.036599, day: 5, icon: '🏖️' },
+        'airport-hk': { name: '海口美兰国际机场', lng: 110.467385, lat: 19.942495, day: 5, icon: '✈️' }
+    };
+
+    function initMap() {
+        map = new AMap.Map('map', {
+            zoom: 9,
+            center: [109.5, 19.0],
+            mapStyle: 'amap://styles/light',
+            resizeEnable: true
+        });
+
+        addMarkers();
+        drawRoutes();
+        fitAllMarkers();
+    }
+
+    function addMarkers() {
+        Object.keys(spotData).forEach(function(key) {
+            var spot = spotData[key];
+            var color = dayColors[spot.day];
+            var markerContent = '<div style="background:' + color + ';color:#fff;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 2px 8px rgba(0,0,0,0.2);border:2px solid #fff;">' + spot.icon + '</div>';
+
+            var marker = new AMap.Marker({
+                position: [spot.lng, spot.lat],
+                content: markerContent,
+                title: spot.name,
+                offset: new AMap.Pixel(-16, -16),
+                zIndex: 100,
+                extData: { key: key }
+            });
+
+            marker.on('click', function(e) {
+                var d = e.target.getExtData();
+                focusSpot(d.key);
+            });
+
+            marker.setMap(map);
+            markers.push(marker);
+        });
+    }
+
+    function drawRoutes() {
+        var dayRoutes = [
+            ['airport-sy', 'yemeng'],
+            ['nanshan', 'tianya'],
+            ['forest-park', 'yalong'],
+            ['yalong', 'dadonghai'],
+            ['qilou', 'jiari'],
+            ['jiari', 'airport-hk']
+        ];
+
+        dayRoutes.forEach(function(route, idx) {
+            var from = spotData[route[0]];
+            var to = spotData[route[1]];
+            var color = dayColors[from.day];
+
+            var polyline = new AMap.Polyline({
+                path: [[from.lng, from.lat], [to.lng, to.lat]],
+                strokeColor: color,
+                strokeWeight: 3,
+                strokeOpacity: 0.7,
+                strokeStyle: 'dashed',
+                lineJoin: 'round',
+                zIndex: 50
+            });
+            polyline.setMap(map);
+            polylines.push(polyline);
+        });
+    }
+
+    function fitAllMarkers() {
+        if (!map) return;
+        var positions = Object.keys(spotData).map(function(k) {
+            return [spotData[k].lng, spotData[k].lat];
+        });
+        map.setFitView(positions, false, [60, 60, 60, 60]);
+    }
+
+    function focusSpot(key) {
+        var spot = spotData[key];
+        if (!spot || !map) return;
+        map.setZoomAndCenter(14, [spot.lng, spot.lat]);
+
+        var infoWindow = new AMap.InfoWindow({
+            content: '<div style="padding:8px 12px;font-size:14px;font-weight:600;">' + spot.name + '</div>',
+            offset: new AMap.Pixel(0, -40)
+        });
+        infoWindow.open(map, [spot.lng, spot.lat]);
+        setTimeout(function() { infoWindow.close(); }, 2000);
+
+        document.querySelectorAll('.spot-card').forEach(function(card) { card.classList.remove('active'); });
+        var targetCard = document.querySelector('[data-spot="' + key + '"]');
+        if (targetCard) {
+            targetCard.classList.add('active');
+            targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }
+
+    function focusDay(dayIndex) {
+        if (!map) return;
+        var daySpots = Object.keys(spotData).filter(function(k) { return spotData[k].day === dayIndex; });
+        if (daySpots.length === 0) return;
+        var positions = daySpots.map(function(k) { return [spotData[k].lng, spotData[k].lat]; });
+        map.setFitView(positions, false, [80, 80, 80, 80]);
+    }
+
+    function scrollToDay(day) {
+        var el = document.getElementById('day' + day);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    window.onload = function() {
+        var script = document.createElement('script');
+        script.src = 'https://webapi.amap.com/maps?v=2.0&key=8b847386f729d22221c9fbb1c64a056b&callback=initMap';
+        script.onerror = function() {
+            document.getElementById('map').innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#94a3b8;flex-direction:column;gap:12px;"><span style="font-size:3rem;">🗺️</span><span>请替换高德地图 API Key</span><span style="font-size:0.8rem;">将 YOUR_AMAP_KEY 替换为您的key</span></div>';
+        };
+        document.head.appendChild(script);
+    };
+</script>
+</body>
+</html>

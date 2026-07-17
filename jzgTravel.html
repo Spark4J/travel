@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>九寨沟十一四日游攻略 · 彩林秘境</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --d1:#10b981; --d2:#3b82f6; --d3:#f59e0b; --d4:#8b5cf6;
+  --ink:#0f172a; --sub:#64748b; --line:#e2e8f0;
+  --bg:#f8fafc; --card:#ffffff;
+  --hero1:#0ea5e9; --hero2:#1e3a8a;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{font-family:'Noto Sans SC',-apple-system,sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;overflow-x:hidden}
+
+/* Hero */
+.hero{position:relative;min-height:92vh;display:flex;align-items:flex-end;padding:0 0 7vh;color:#fff;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:linear-gradient(135deg,rgba(14,165,233,.92),rgba(30,58,138,.95) 60%,rgba(15,23,42,.96)),url('https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Jiuzhaigou%20valley%20autumn%20panorama%20colorful%20forest%20turquoise%20lakes%20waterfalls%20snow%20mountains%20golden%20leaves%20cinematic%20wide%20angle%20ultra%20detailed%20realistic%20photography&image_size=landscape_16_9') center/cover no-repeat}
+.hero-bg::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 20% 30%,rgba(16,185,129,.25),transparent 40%),radial-gradient(circle at 80% 70%,rgba(139,92,246,.2),transparent 45%)}
+.hero-inner{position:relative;z-index:2;width:100%;max-width:1100px;margin:0 auto;padding:0 24px}
+.hero .tag{display:inline-flex;align-items:center;gap:8px;padding:7px 16px;border-radius:999px;background:rgba(255,255,255,.14);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.25);font-size:13px;font-weight:500;letter-spacing:.5px}
+.hero .tag i{width:8px;height:8px;border-radius:50%;background:#34d399;box-shadow:0 0 10px #34d399;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.hero h1{font-size:clamp(2.4rem,7vw,4.6rem);font-weight:900;line-height:1.05;margin:18px 0 10px;letter-spacing:-1px;text-shadow:0 4px 30px rgba(0,0,0,.4)}
+.hero h1 span{background:linear-gradient(90deg,#fbbf24,#34d399,#22d3ee);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hero p.sub{font-size:clamp(1rem,2.5vw,1.2rem);opacity:.9;font-weight:300;max-width:560px;margin-bottom:28px}
+.hero-meta{display:flex;flex-wrap:wrap;gap:12px}
+.hero-meta .m{display:flex;align-items:center;gap:8px;padding:10px 16px;border-radius:12px;background:rgba(255,255,255,.12);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.18);font-size:14px;font-weight:500}
+.hero-meta .m b{font-size:18px;font-weight:800}
+.hero-meta .m .ic{width:22px;height:22px;display:flex;align-items:center;justify-content:center;border-radius:6px;font-size:13px}
+.scroll-hint{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);z-index:3;color:rgba(255,255,255,.7);font-size:12px;display:flex;flex-direction:column;align-items:center;gap:6px;animation:bounce 2.5s infinite}
+.scroll-hint .arrow{width:18px;height:18px;border-right:2px solid;border-bottom:2px solid;transform:rotate(45deg)}
+@keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
+
+/* Container */
+.wrap{max-width:1100px;margin:0 auto;padding:0 24px}
+section{padding:60px 0}
+.sec-head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:30px;gap:16px;flex-wrap:wrap}
+.sec-head h2{font-size:clamp(1.6rem,4vw,2.3rem);font-weight:800;letter-spacing:-.5px;display:flex;align-items:center;gap:12px}
+.sec-head h2::before{content:'';width:6px;height:32px;border-radius:3px;background:linear-gradient(var(--hero1),var(--hero2))}
+.sec-head .desc{color:var(--sub);font-size:14px;max-width:380px}
+
+/* Weather */
+.weather-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px}
+.wcard{background:var(--card);border-radius:18px;padding:18px;border:1px solid var(--line);transition:transform .3s,box-shadow .3s;position:relative;overflow:hidden}
+.wcard::before{content:'';position:absolute;top:0;left:0;width:100%;height:3px;background:linear-gradient(90deg,var(--hero1),var(--hero2))}
+.wcard:hover{transform:translateY(-4px);box-shadow:0 12px 30px rgba(14,165,233,.15)}
+.wcard .d{font-size:12px;color:var(--sub);font-weight:500}
+.wcard .ic{font-size:28px;margin:6px 0}
+.wcard .wt{font-size:14px;font-weight:600;color:var(--ink)}
+.wcard .tp{font-size:13px;color:var(--sub);margin-top:4px}
+.wcard .tp b{color:#ef4444;font-weight:700}
+
+/* Map */
+#map{height:520px;border-radius:24px;overflow:hidden;border:1px solid var(--line);box-shadow:0 20px 50px rgba(15,23,42,.1);z-index:1}
+.map-legend{position:absolute;bottom:18px;left:18px;z-index:1000;background:rgba(255,255,255,.95);backdrop-filter:blur(10px);padding:12px 14px;border-radius:14px;box-shadow:0 6px 20px rgba(0,0,0,.12);font-size:12px}
+.map-legend .row{display:flex;align-items:center;gap:8px;margin:3px 0;font-weight:500;color:var(--ink)}
+.map-legend .ln{width:22px;height:3px;border-radius:2px}
+.map-tools{position:absolute;top:18px;right:18px;z-index:1000;display:flex;flex-direction:column;gap:6px}
+.map-tools button{width:40px;height:40px;border:none;border-radius:10px;background:#fff;box-shadow:0 4px 12px rgba(0,0,0,.12);font-size:18px;cursor:pointer;color:var(--ink);transition:.2s;font-weight:700}
+.map-tools button:hover{background:var(--hero1);color:#fff}
+.map-tools button.active{background:var(--hero1);color:#fff}
+
+/* Itinerary */
+.day{margin-bottom:50px;background:var(--card);border-radius:24px;overflow:hidden;border:1px solid var(--line);box-shadow:0 8px 30px rgba(15,23,42,.05)}
+.day-head{padding:26px 28px;color:#fff;position:relative;overflow:hidden}
+.day-head.d1{background:linear-gradient(135deg,#10b981,#059669)}
+.day-head.d2{background:linear-gradient(135deg,#3b82f6,#1d4ed8)}
+.day-head.d3{background:linear-gradient(135deg,#f59e0b,#d97706)}
+.day-head.d4{background:linear-gradient(135deg,#8b5cf6,#6d28d9)}
+.day-head::after{content:'';position:absolute;right:-40px;top:-40px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.1)}
+.day-head .badge{font-size:12px;opacity:.85;font-weight:600;letter-spacing:1px}
+.day-head h3{font-size:1.7rem;font-weight:800;margin:4px 0 6px;position:relative}
+.day-head .info{font-size:13px;opacity:.92;display:flex;flex-wrap:wrap;gap:14px;position:relative}
+.day-head .info span{display:flex;align-items:center;gap:5px}
+.day-body{padding:24px 28px}
+.route-line{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:22px;padding:14px 16px;background:linear-gradient(90deg,#f1f5f9,#f8fafc);border-radius:14px;border:1px dashed var(--line);font-size:13px}
+.route-line .pt{padding:5px 12px;background:#fff;border-radius:8px;font-weight:600;color:var(--ink);box-shadow:0 2px 6px rgba(0,0,0,.05);white-space:nowrap}
+.route-line .ar{color:var(--sub)}
+.route-line .km{margin-left:auto;padding:5px 10px;border-radius:8px;background:#fef3c7;color:#92400e;font-weight:700;font-size:12px;white-space:nowrap}
+
+.taxi-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 18px;border-radius:14px;background:linear-gradient(90deg,#fff7ed,#fef3c7);border:1px solid #fed7aa;margin-bottom:22px;flex-wrap:wrap}
+.taxi-bar .tx-info{display:flex;align-items:center;gap:10px;font-size:14px}
+.taxi-bar .tx-info .car{font-size:22px}
+.taxi-bar .tx-info b{color:#c2410c}
+.taxi-btn{display:inline-flex;align-items:center;gap:7px;padding:10px 18px;border-radius:10px;background:linear-gradient(135deg,#f97316,#ea580c);color:#fff;text-decoration:none;font-size:14px;font-weight:700;box-shadow:0 6px 16px rgba(249,115,22,.4);transition:.2s;border:none;cursor:pointer;white-space:nowrap}
+.taxi-btn:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(249,115,22,.5)}
+.taxi-btn:active{transform:translateY(0)}
+
+.spots{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:18px}
+.spot{background:#fff;border-radius:16px;overflow:hidden;border:1px solid var(--line);transition:transform .3s,box-shadow .3s;cursor:pointer;display:flex;flex-direction:column}
+.spot:hover{transform:translateY(-6px);box-shadow:0 16px 40px rgba(15,23,42,.12)}
+.spot .ph{height:160px;overflow:hidden;position:relative;background:#e2e8f0}
+.spot .ph img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.spot:hover .ph img{transform:scale(1.08)}
+.spot .num{position:absolute;top:10px;left:10px;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.95);color:var(--ink);font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.spot .meta{padding:14px 15px;flex:1;display:flex;flex-direction:column}
+.spot .meta h4{font-size:15px;font-weight:700;margin-bottom:5px}
+.spot .meta .loc{font-size:11px;color:var(--sub);margin-bottom:8px;display:flex;align-items:center;gap:4px}
+.spot .meta p{font-size:12.5px;color:#475569;line-height:1.5;flex:1}
+.spot .foot{display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--line);font-size:11px;color:var(--sub)}
+.spot .rate{color:#f59e0b;font-weight:700}
+.d1 .spot .num{background:#10b981;color:#fff}
+.d2 .spot .num{background:#3b82f6;color:#fff}
+.d3 .spot .num{background:#f59e0b;color:#fff}
+.d4 .spot .num{background:#8b5cf6;color:#fff}
+
+.tips{margin-top:18px;padding:16px 18px;border-radius:14px;background:#eff6ff;border-left:4px solid #3b82f6;font-size:13px;color:#1e40af;line-height:1.7}
+.tips b{color:#1e3a8a}
+
+/* CTA */
+.cta{background:linear-gradient(135deg,#0ea5e9,#1e3a8a);border-radius:28px;padding:50px 40px;text-align:center;color:#fff;position:relative;overflow:hidden}
+.cta::before{content:'';position:absolute;top:-60px;right:-60px;width:240px;height:240px;border-radius:50%;background:rgba(255,255,255,.08)}
+.cta::after{content:'';position:absolute;bottom:-80px;left:-40px;width:280px;height:280px;border-radius:50%;background:rgba(255,255,255,.06)}
+.cta h2{font-size:clamp(1.6rem,4vw,2.4rem);font-weight:800;margin-bottom:12px;position:relative}
+.cta p{opacity:.92;font-size:15px;max-width:520px;margin:0 auto 28px;position:relative}
+.cta-btn{display:inline-flex;align-items:center;gap:10px;padding:16px 36px;border-radius:14px;background:#fff;color:#1e3a8a;text-decoration:none;font-size:16px;font-weight:800;box-shadow:0 12px 30px rgba(0,0,0,.2);transition:.3s;position:relative}
+.cta-btn:hover{transform:translateY(-3px);box-shadow:0 16px 40px rgba(0,0,0,.3)}
+.cta-btn .logo{width:24px;height:24px;background:linear-gradient(135deg,#0ea5e9,#3b82f6);border-radius:6px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:900}
+
+footer{text-align:center;padding:40px 20px;color:var(--sub);font-size:12px;background:#fff;border-top:1px solid var(--line)}
+footer b{color:var(--ink)}
+
+@media(max-width:640px){
+  .hero{min-height:88vh}
+  .hero-meta .m b{font-size:16px}
+  #map{height:420px}
+  .day-head{padding:22px 20px}
+  .day-body{padding:18px 16px}
+  .spots{grid-template-columns:1fr}
+  .cta{padding:36px 22px}
+  .route-line{font-size:12px}
+}
+
+.leaflet-popup-content-wrapper{border-radius:14px;box-shadow:0 12px 30px rgba(0,0,0,.15)}
+.leaflet-popup-content{margin:14px 16px;font-family:'Noto Sans SC',sans-serif}
+.leaflet-popup-content h5{font-size:14px;font-weight:800;margin-bottom:4px}
+.leaflet-popup-content .pp{font-size:11px;color:var(--sub)}
+.leaflet-popup-content img{width:160px;height:100px;object-fit:cover;border-radius:8px;margin-top:8px}
+.custom-pin{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:2px solid #fff;box-shadow:0 4px 10px rgba(0,0,0,.3);font-size:13px;font-weight:800;color:#fff}
+.custom-pin span{transform:rotate(45deg)}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-inner">
+    <span class="tag"><i></i>2026 国庆黄金周 · 限量攻略</span>
+    <h1>九寨沟 <span>四日秘境</span><br>彩林·碧水·圣山</h1>
+    <p class="sub">十一黄金周正值九寨沟金秋最佳观赏期，雪山彩林、钙化碧池与藏族古城一次集齐。</p>
+    <div class="hero-meta">
+      <div class="m"><div class="ic" style="background:#fbbf24">📅</div><div><div style="opacity:.8;font-size:11px">行程</div><b>10.01 - 10.04</b></div></div>
+      <div class="m"><div class="ic" style="background:#34d399">📍</div><div><div style="opacity:.8;font-size:11px">景区</div><b>19 个点位</b></div></div>
+      <div class="m"><div class="ic" style="background:#f97316">🚕</div><div><div style="opacity:.8;font-size:11px">打车</div><b>4 段接驳</b></div></div>
+      <div class="m"><div class="ic" style="background:#60a5fa">🌡️</div><div><div style="opacity:.8;font-size:11px">气温</div><b>5 - 18℃</b></div></div>
+    </div>
+  </div>
+  <div class="scroll-hint">向下滚动探索行程<span class="arrow"></span></div>
+</header>
+
+<!-- 天气 -->
+<section style="padding-top:50px">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>天气概况</h2>
+      <p class="desc">九寨沟十月正值金秋，昼夜温差大，午后可能阵雨。建议携带冲锋衣、防晒与雨具。</p>
+    </div>
+    <div class="weather-grid" id="weather"></div>
+  </div>
+</section>
+
+<!-- 地图 -->
+<section style="padding-top:20px">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>行程地图</h2>
+      <p class="desc">点击右上角按钮可单独高亮某日路线，点击标记查看景点详情。</p>
+    </div>
+    <div style="position:relative">
+      <div id="map"></div>
+      <div class="map-legend">
+        <div class="row"><span class="ln" style="background:#10b981"></span>Day1 抵达九寨沟</div>
+        <div class="row"><span class="ln" style="background:#3b82f6"></span>Day2 沟内深度游</div>
+        <div class="row"><span class="ln" style="background:#f59e0b"></span>Day3 黄龙探秘</div>
+        <div class="row"><span class="ln" style="background:#8b5cf6"></span>Day4 古城返程</div>
+      </div>
+      <div class="map-tools">
+        <button id="btn-all" class="active" title="全部">全</button>
+        <button id="btn-1" title="Day1">1</button>
+        <button id="btn-2" title="Day2">2</button>
+        <button id="btn-3" title="Day3">3</button>
+        <button id="btn-4" title="Day4">4</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 行程 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>四日行程详解</h2>
+      <p class="desc">每日景区间已生成打车唤醒链接，点击"打车前往"即可调起高德地图 App。</p>
+    </div>
+
+    <!-- Day1 -->
+    <article class="day">
+      <div class="day-head d1">
+        <div class="badge">DAY 01 · 10月01日</div>
+        <h3>抵达九寨 · 入住沟口</h3>
+        <div class="info">
+          <span>✈️ 航班抵达九寨黄龙机场</span>
+          <span>🚕 打车 102km / 约2小时</span>
+          <span>🏨 入住漳扎镇沟口酒店</span>
+        </div>
+      </div>
+      <div class="day-body d1">
+        <div class="route-line">
+          <span class="pt">九寨黄龙机场</span><span class="ar">→🚕→</span><span class="pt">九寨沟沟口酒店</span>
+          <span class="km">102.5km · 约2h3min</span>
+        </div>
+        <div class="taxi-bar">
+          <div class="tx-info"><span class="car">🚕</span><div>同日接驳 · <b>机场 → 九寨沟景区</b></div></div>
+          <a class="taxi-btn" href="amapuri://drive/takeTaxi?sourceApplication=amapplatform&slat=32.851260&slon=103.685223&sname=%E4%B9%9D%E5%AF%A8%E9%BB%84%E9%BE%99%E6%9C%BA%E5%9C%BA&dlon=103.912874&dlat=33.142376&dname=%E4%B9%9D%E5%AF%A8%E6%B2%9F%E6%99%AF%E5%8C%BA">打车前往 →</a>
+        </div>
+        <div class="spots" id="spots-1"></div>
+        <div class="tips"><b>今日贴士：</b>高原反应需注意，抵达后建议缓步慢行、多饮水、避免剧烈运动与饮酒；提前在景区官方小程序预约次日门票与观光车票。</div>
+      </div>
+    </article>
+
+    <!-- Day2 -->
+    <article class="day">
+      <div class="day-head d2">
+        <div class="badge">DAY 02 · 10月02日</div>
+        <h3>九寨沟深度游 · Y 字三沟</h3>
+        <div class="info">
+          <span>🎫 7:00 入园乘观光车</span>
+          <span>🌲 树正沟 → 则查洼沟 → 日则沟</span>
+          <span>📷 全程约 9 小时</span>
+        </div>
+      </div>
+      <div class="day-body d2">
+        <div class="route-line">
+          <span class="pt">树正寨</span><span class="ar">→</span><span class="pt">树正瀑布</span><span class="ar">→</span><span class="pt">诺日朗瀑布</span><span class="ar">→</span><span class="pt">长海</span><span class="ar">→</span><span class="pt">五彩池</span><span class="ar">→</span><span class="pt">镜海</span><span class="ar">→</span><span class="pt">五花海</span><span class="ar">→</span><span class="pt">珍珠滩瀑布</span><span class="ar">→</span><span class="pt">熊猫海</span><span class="ar">→</span><span class="pt">箭竹海</span>
+          <span class="km" style="background:#dbeafe;color:#1e40af">园区观光车接驳</span>
+        </div>
+        <div class="taxi-bar" style="background:linear-gradient(90deg,#eff6ff,#dbeafe);border-color:#bfdbfe">
+          <div class="tx-info"><span class="car">🚌</span><div>沟内景点间 <b>使用景区观光车</b>，私家车与出租车不可入园</div></div>
+        </div>
+        <div class="spots" id="spots-2"></div>
+        <div class="tips"><b>今日贴士：</b>建议 7:00 前入园避开人流；上午先走则查洼沟长海方向（观光车直达终点，越早光线越透），下午转日则沟五花海、珍珠滩；诺日朗中心可用自助午餐（约 60 元）。</div>
+      </div>
+    </article>
+
+    <!-- Day3 -->
+    <article class="day">
+      <div class="day-head d3">
+        <div class="badge">DAY 03 · 10月03日</div>
+        <h3>黄龙钙华奇观 · 转场松潘</h3>
+        <div class="info">
+          <span>🚕 九寨沟 → 黄龙 124km</span>
+          <span>🏔️ 索道上 + 步行下</span>
+          <span>🚕 黄龙 → 松州古城 41km</span>
+        </div>
+      </div>
+      <div class="day-body d3">
+        <div class="route-line">
+          <span class="pt">九寨沟酒店</span><span class="ar">→🚕→</span><span class="pt">黄龙索道</span><span class="ar">→</span><span class="pt">五彩池</span><span class="ar">→</span><span class="pt">金沙铺地</span><span class="ar">→</span><span class="pt">飞瀑流辉</span><span class="ar">→</span><span class="pt">迎宾池</span><span class="ar">→🚕→</span><span class="pt">松州古城</span>
+          <span class="km">124km+41km · 共约4h车程</span>
+        </div>
+        <div class="taxi-bar">
+          <div class="tx-info"><span class="car">🚕</span><div>上午接驳 · <b>九寨沟 → 黄龙国家级风景名胜区</b></div></div>
+          <a class="taxi-btn" href="amapuri://drive/takeTaxi?sourceApplication=amapplatform&slat=33.142376&slon=103.912874&sname=%E4%B9%9D%E5%AF%A8%E6%B2%9F%E6%99%AF%E5%8C%BA&dlon=103.833028&dlat=32.743163&dname=%E9%BB%84%E9%BE%99%E5%9B%BD%E5%AE%B6%E7%BA%A7%E9%A3%8E%E6%99%AF%E5%90%8D%E8%83%9C%E5%8C%BA">打车前往 →</a>
+        </div>
+        <div class="taxi-bar" style="margin-top:-6px">
+          <div class="tx-info"><span class="car">🚕</span><div>傍晚接驳 · <b>黄龙国家级风景名胜区 → 松州古城</b></div></div>
+          <a class="taxi-btn" href="amapuri://drive/takeTaxi?sourceApplication=amapplatform&slat=32.743163&slon=103.833028&sname=%E9%BB%84%E9%BE%99%E5%9B%BD%E5%AE%B6%E7%BA%A7%E9%A3%8E%E6%99%AF%E5%90%8D%E8%83%9C%E5%8C%BA&dlon=103.598169&dlat=32.637385&dname=%E6%9D%BE%E5%B7%9E%E5%8F%A4%E5%9F%8E">打车前往 →</a>
+        </div>
+        <div class="spots" id="spots-3"></div>
+        <div class="tips"><b>今日贴士：</b>黄龙海拔 3500m+，建议乘索道上行（80 元）再步行下山游览，节省体力并减轻高反；黄龙最晚 16:00 入园，务必控好时间；夜宿松潘可逛古城吃牦牛肉火锅。</div>
+      </div>
+    </article>
+
+    <!-- Day4 -->
+    <article class="day">
+      <div class="day-head d4">
+        <div class="badge">DAY 04 · 10月04日</div>
+        <h3>松州古城 · 返程</h3>
+        <div class="info">
+          <span>🏯 古城墙+茶马古道</span>
+          <span>🚕 松潘 → 机场 32km</span>
+          <span>✈️ 返程航班</span>
+        </div>
+      </div>
+      <div class="day-body d4">
+        <div class="route-line">
+          <span class="pt">松州古城</span><span class="ar">→🚕→</span><span class="pt">九寨黄龙机场</span>
+          <span class="km">32.3km · 约45min</span>
+        </div>
+        <div class="taxi-bar">
+          <div class="tx-info"><span class="car">🚕</span><div>返程接驳 · <b>松州古城 → 九寨黄龙机场</b></div></div>
+          <a class="taxi-btn" href="amapuri://drive/takeTaxi?sourceApplication=amapplatform&slat=32.637385&slon=103.598169&sname=%E6%9D%BE%E5%B7%9E%E5%8F%A4%E5%9F%8E&dlon=103.685223&dlat=32.851260&dname=%E4%B9%9D%E5%AF%A8%E9%BB%84%E9%BE%99%E6%9C%BA%E5%9C%BA">打车前往 →</a>
+        </div>
+        <div class="spots" id="spots-4"></div>
+        <div class="tips"><b>今日贴士：</b>松州古城清晨人少景美，建议逛觐阳门与古城墙；松潘至机场约 45 分钟，建议起飞前 2.5 小时出发，国庆返程车多请预留余量。</div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- CTA -->
+<section>
+  <div class="wrap">
+    <div class="cta">
+      <h2>在高德地图 App 中查看完整行程</h2>
+      <p>行程规划已聚合为高德地图个人行程地图，按 4 日顺序展示 19 个打卡点，点击下方按钮即可一键唤起高德地图 App 查看完整路线。</p>
+      <a class="cta-btn" href="amapuri://workInAmap/createWithToken?polymericId=mcp_9faa070cbee448d5a2b28dedd804f629&from=MCP">
+        <span class="logo">高</span>打开高德地图查看行程
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p><b>九寨沟十一四日游攻略</b> · 数据来源于高德地图开放平台 · 2026 国庆专版</p>
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+// 景点数据
+const POIS={
+  d1:[
+    {n:'九寨黄龙机场',x:103.685223,y:32.851260,addr:'阿坝州川主寺镇',desc:'海拔3400米的高原机场，九寨沟与黄龙共同的空中门户。',img:'http://store.is.autonavi.com/showpic/908ecd55bc226b5cabe74893dfbc59cd',rate:''},
+    {n:'九寨沟景区',x:103.912874,y:33.142376,addr:'阿坝州漳扎镇',desc:'世界自然遗产，沟口游客中心，次日入园起点。',img:'http://store.is.autonavi.com/showpic/ec73257a74bd2193e4612a0c54ee87e1',rate:'4.9'}
+  ],
+  d2:[
+    {n:'树正寨观景台',x:103.896995,y:33.199581,addr:'九寨沟·树正沟',desc:'俯瞰树正群海与藏寨全景的高视角观景平台。',img:'https://aos-comment.amap.com/B0LUCHVQGT/comment/content_media_external_file_2131_1763517892604_64809792.jpg',rate:'4.1'},
+    {n:'树正瀑布',x:103.895212,y:33.194122,addr:'九寨沟·树正沟',desc:'沟口第一个瀑布，水帘分层跌落，秋季彩林环绕。',img:'https://aos-comment.amap.com/B03450MP0K/comment/A8D958DA_6F12_4D56_9E02_85E69ADC77A3_L0_001_1500_200_1762148010347_90365021.jpg',rate:'4.3'},
+    {n:'诺日朗瀑布',x:103.907291,y:33.163212,addr:'九寨沟·三沟交汇',desc:'中国最宽的钙华瀑布，宽270米，《西游记》片尾取景地。',img:'http://store.is.autonavi.com/showpic/62e73e23007ae5c7c1062bd041a837aa',rate:'4.6'},
+    {n:'长海',x:103.932113,y:33.036228,addr:'九寨沟·则查洼沟',desc:'九寨沟最大最深的海子，海拔3060米，雪山倒影绝佳。',img:'http://store.is.autonavi.com/showpic/1caccdecdf2ba78481b66bbfb7ae6d6b',rate:'4.6'},
+    {n:'五彩池',x:103.933001,y:33.045129,addr:'九寨沟·则查洼沟',desc:'九寨沟最小而色彩最艳的海子，蓝绿奇幻如宝石。',img:'http://store.is.autonavi.com/showpic/542754a6dc0f2b6d696f70c97ba6141b',rate:'4.6'},
+    {n:'镜海',x:103.898862,y:33.158553,addr:'九寨沟·日则沟',desc:'水面如镜，晨光时段倒影最美，最佳拍摄时间8点前。',img:'http://store.is.autonavi.com/showpic/14cb0723dd28a7fe143cdb79ebdbf778',rate:'4.4'},
+    {n:'五花海',x:103.880726,y:33.159134,addr:'九寨沟·日则沟',desc:'九寨精华之冠，水底枯木与五彩斑斓的水面交相辉映。',img:'http://store.is.autonavi.com/showpic/c6ee48858659637965d9ecd8349eb272',rate:'4.5'},
+    {n:'珍珠滩瀑布',x:103.887233,y:33.166792,addr:'九寨沟·日则沟',desc:'水流冲刷钙华滩形成万千水珠，《西游记》片尾经典场景。',img:'http://store.is.autonavi.com/showpic/2fdde207658e7b43abeb574fef3d2cf5',rate:'4.6'},
+    {n:'熊猫海',x:103.875189,y:33.148810,addr:'九寨沟·日则沟',desc:'传说熊猫饮水之地，秋季彩林倒影最佳观赏点之一。',img:'https://store.is.autonavi.com/showpic/44125a388318256c0000000736796435?type=pic',rate:'4.4'},
+    {n:'箭竹海',x:103.875175,y:33.132520,addr:'九寨沟·日则沟',desc:'张艺谋《英雄》取景地，箭竹环湖、碧水如翠。',img:'https://store.is.autonavi.com/showpic/519e5201873f479f84e2cade1262abef',rate:'4.4'}
+  ],
+  d3:[
+    {n:'黄龙国家级风景名胜区',x:103.833028,y:32.743163,addr:'阿坝州·黄龙乡',desc:'世界自然遗产，以钙华彩池群闻名，被誉为"人间瑶池"。',img:'http://store.is.autonavi.com/showpic/5a628d1fae153b29a4800fcec190efaf',rate:'4.8'},
+    {n:'黄龙索道停车场',x:103.839586,y:32.756543,addr:'平松路55号',desc:'索道上站入口，建议乘索道上山步行下山节省体力。',img:'https://aos-comment.amap.com/B0FFIQ0CY3/comment/B3513C08_47FC_40BF_8E48_BD8E6F99DF9A_L0_001_1126_200_1764290713037_70849108.jpg',rate:''},
+    {n:'五彩池(黄龙)',x:103.834815,y:32.723116,addr:'黄龙景区·最高点',desc:'黄龙最大彩池群，3500米海拔上的天然钙华奇观。',img:'https://aos-comment.amap.com/B0FFGZUAMA/comment/4676bcca1054816d2aa9dd3c55be5686_2048_2048_80.jpg',rate:'4.6'},
+    {n:'金沙铺地',x:103.829385,y:32.745767,addr:'黄龙景区·中段',desc:'长1300米的金色钙华滩流，宛如龙鳞铺地。',img:'https://aos-comment.amap.com/B03450MQBU/comment/175875717108_1758757171468_11766657.jpg',rate:'3.7'},
+    {n:'飞瀑流辉',x:103.827212,y:32.748534,addr:'黄龙景区·下段',desc:'梯湖叠瀑，水珠在阳光下折射出七彩光芒。',img:'https://aos-comment.amap.com/B03450MQCM/comment/4d353539b3ce2e7c976a8ac296a032fc_2048_2048_80.jpg',rate:'3.4'},
+    {n:'迎宾池',x:103.825555,y:32.749031,addr:'黄龙景区·入口',desc:'黄龙第一组彩池群，渐变色阶宛若迎宾队列。',img:'https://aos-comment.amap.com/B0FFG6QODN/comment/c23879beea49e071322484fce6a95154_2048_2048_80.jpg',rate:'4.1'},
+    {n:'松州古城',x:103.598169,y:32.637385,addr:'松潘县·进安镇',desc:'汉唐边陲重镇，茶马古道驿站，藏羌回汉多族聚居。',img:'http://store.is.autonavi.com/showpic/46f6c9a30e3eb3665541414ade4ce9f2',rate:'4.6'}
+  ],
+  d4:[
+    {n:'松州古城',x:103.598169,y:32.637385,addr:'松潘县·进安镇',desc:'清晨古城漫步，觐阳门、古城墙、茶马古道遗址。',img:'http://store.is.autonavi.com/showpic/46f6c9a30e3eb3665541414ade4ce9f2',rate:'4.6'},
+    {n:'九寨黄龙机场',x:103.685223,y:32.851260,addr:'阿坝州川主寺镇',desc:'返程航班起飞，建议提前2.5小时到达。',img:'http://store.is.autonavi.com/showpic/908ecd55bc226b5cabe74893dfbc59cd',rate:''}
+  ]
+};
+
+const DAY_COLORS={d1:'#10b981',d2:'#3b82f6',d3:'#f59e0b',d4:'#8b5cf6'};
+const DAY_LABEL={d1:'D1',d2:'D2',d3:'D3',d4:'D4'};
+
+// 渲染景点卡片
+function renderSpots(dayKey){
+  const box=document.getElementById('spots-'+dayKey.slice(1));
+  POIS[dayKey].forEach((p,i)=>{
+    const c=document.createElement('div');
+    c.className='spot';
+    c.innerHTML=`
+      <div class="ph">
+        <img loading="lazy" src="${p.img}" alt="${p.n}" onerror="this.src='https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent(p.n+' scenic landscape autumn golden')}%20realistic%20photography&image_size=landscape_4_3'">
+        <div class="num">${i+1}</div>
+      </div>
+      <div class="meta">
+        <h4>${p.n}</h4>
+        <div class="loc">📍 ${p.addr}</div>
+        <p>${p.desc}</p>
+        <div class="foot">
+          <span>📍 ${p.y.toFixed(4)}, ${p.x.toFixed(4)}</span>
+          ${p.rate?`<span class="rate">★ ${p.rate}</span>`:''}
+        </div>
+      </div>`;
+    c.addEventListener('click',()=>{
+      map.flyTo([p.y,p.x],15,{duration:1.2});
+      markers[dayKey][i].openPopup();
+      window.scrollTo({top:document.getElementById('map').offsetTop-20,behavior:'smooth'});
+    });
+    box.appendChild(c);
+  });
+}
+['d1','d2','d3','d4'].forEach(renderSpots);
+
+// 天气（阿坝州近期预报，结合十月九寨沟典型气候）
+const W=[
+  {d:'10.01 周四',ic:'🌤️',wt:'多云转晴',lo:5,hi:16},
+  {d:'10.02 周五',ic:'⛅',wt:'多云',lo:6,hi:18},
+  {d:'10.03 周六',ic:'🌦️',wt:'阵雨',lo:4,hi:14},
+  {d:'10.04 周日',ic:'☀️',wt:'晴',lo:5,hi:17}
+];
+const wb=document.getElementById('weather');
+W.forEach(w=>{
+  const d=document.createElement('div');
+  d.className='wcard';
+  d.innerHTML=`<div class="d">${w.d}</div><div class="ic">${w.ic}</div><div class="wt">${w.wt}</div><div class="tp">${w.lo}℃ ~ <b>${w.hi}℃</b></div>`;
+  wb.appendChild(d);
+});
+
+// 初始化地图
+const map=L.map('map',{zoomControl:false,scrollWheelZoom:true}).setView([32.95,103.82],8);
+L.control.zoom({position:'bottomright'}).addTo(map);
+L.tileLayer('https://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}',{
+  subdomains:['1','2','3','4'],maxZoom:18,attribution:'高德地图'
+}).addTo(map);
+// 地形图层切换
+const terrain=L.tileLayer('https://webst0{s}.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}',{subdomains:['1','2','3','4'],maxZoom:18});
+let terrainOn=false;
+
+// 标记与路线
+const markers={d1:[],d2:[],d3:[],d4:[]};
+const polylines={};
+
+function makeIcon(day,idx,color){
+  return L.divIcon({className:'',html:`<div class="custom-pin" style="background:${color}"><span>${idx}</span></div>`,iconSize:[30,30],iconAnchor:[15,30],popupAnchor:[0,-30]});
+}
+
+['d1','d2','d3','d4'].forEach(day=>{
+  POIS[day].forEach((p,i)=>{
+    const m=L.marker([p.y,p.x],{icon:makeIcon(day,i+1,DAY_COLORS[day])}).addTo(map);
+    m.bindPopup(`<h5 style="color:${DAY_COLORS[day]}">${DAY_LABEL[day]} · ${p.n}</h5><div class="pp">📍 ${p.addr}<br>${p.desc}</div><img src="${p.img}" alt="${p.n}">`,{maxWidth:220});
+    markers[day].push(m);
+  });
+  const latlngs=POIS[day].map(p=>[p.y,p.x]);
+  polylines[day]=L.polyline(latlngs,{color:DAY_COLORS[day],weight:4,opacity:.85,dashArray:day==='d2'?'8 6':null}).addTo(map);
+});
+
+// 视图筛选
+function showDay(key){
+  Object.keys(markers).forEach(d=>{
+    const on=(key==='all'||key===d);
+    markers[d].forEach(m=> on?m.addTo(map):map.removeLayer(m));
+    if(on) polylines[d].addTo(map); else map.removeLayer(polylines[d]);
+  });
+  document.querySelectorAll('.map-tools button').forEach(b=>b.classList.remove('active'));
+  document.getElementById('btn-'+(key==='all'?'all':key.slice(1))).classList.add('active');
+  if(key==='all'){
+    const g=L.featureGroup(Object.values(markers).flat());
+    map.flyToBounds(g.getBounds().pad(0.15));
+  }else{
+    map.flyToBounds(polylines[key].getBounds().pad(0.2));
+  }
+}
+document.getElementById('btn-all').onclick=()=>showDay('all');
+document.getElementById('btn-1').onclick=()=>showDay('d1');
+document.getElementById('btn-2').onclick=()=>showDay('d2');
+document.getElementById('btn-3').onclick=()=>showDay('d3');
+document.getElementById('btn-4').onclick=()=>showDay('d4');
+
+// 双击地图切换地形图
+map.on('dblclick',()=>{
+  if(terrainOn){map.removeLayer(terrain);terrainOn=false;}
+  else{terrain.addTo(map);terrain.bringToBack();terrainOn=true;}
+});
+
+// 全览
+setTimeout(()=>{
+  const g=L.featureGroup(Object.values(markers).flat());
+  map.fitBounds(g.getBounds().pad(0.15));
+},300);
+</script>
+</body>
+</html>
