@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>❄️ 哈尔滨·长白山5天冰雪旅行攻略 | 冰城 → 雪域圣山</title>
+    <style>
+        :root {
+            --primary: #0284c7;
+            --primary-dark: #075985;
+            --secondary: #f97316;
+            --accent: #06b6d4;
+            --bg: #f0f9ff;
+            --card-bg: #ffffff;
+            --text: #0f172a;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+            --shadow: 0 4px 24px rgba(14, 165, 233, 0.08);
+            --shadow-lg: 0 12px 40px rgba(14, 165, 233, 0.15);
+            --radius: 16px;
+            --radius-sm: 10px;
+            --gradient-ice: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 50%, #7dd3fc 100%);
+            --gradient-snow: linear-gradient(145deg, #ffffff 0%, #f0f9ff 100%);
+            --gradient-aurora: linear-gradient(135deg, #0c4a6e 0%, #0369a1 30%, #0ea5e9 70%, #06b6d4 100%);
+            --gradient-warm: linear-gradient(135deg, #f97316 0%, #ea580c 50%, #c2410c 100%);
+            --gradient-card: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* 顶部横幅 - 极地夜空 */
+        .hero {
+            position: relative;
+            background: linear-gradient(135deg, #0c4a6e 0%, #075985 30%, #0369a1 60%, #0ea5e9 100%);
+            padding: 60px 20px 80px;
+            text-align: center;
+            overflow: hidden;
+            clip-path: ellipse(150% 100% at 50% 0%);
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(ellipse at 30% 70%, rgba(125, 211, 252, 0.18) 0%, transparent 50%),
+                        radial-gradient(ellipse at 70% 30%, rgba(6, 182, 212, 0.22) 0%, transparent 50%);
+            animation: heroFloat 8s ease-in-out infinite;
+        }
+        /* 飘雪效果 */
+        .snowflake {
+            position: absolute;
+            color: rgba(255,255,255,0.8);
+            font-size: 1.2rem;
+            animation: snowfall linear infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+        @keyframes snowfall {
+            0% { transform: translateY(-20px) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(400px) rotate(360deg); opacity: 0; }
+        }
+        @keyframes heroFloat {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(20px, -20px); }
+        }
+        .hero-content { position: relative; z-index: 2; }
+        .hero h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 800;
+            color: #fff;
+            text-shadow: 0 2px 14px rgba(0,0,0,0.25);
+            margin-bottom: 12px;
+            letter-spacing: 1px;
+        }
+        .hero .subtitle {
+            font-size: 1.2rem;
+            color: rgba(255,255,255,0.92);
+            font-weight: 400;
+        }
+        .hero .date-badge {
+            display: inline-block;
+            margin-top: 16px;
+            padding: 8px 24px;
+            background: rgba(255,255,255,0.18);
+            backdrop-filter: blur(10px);
+            border-radius: 50px;
+            color: #fff;
+            font-size: 0.95rem;
+            border: 1px solid rgba(255,255,255,0.35);
+        }
+
+        /* 天气概览 */
+        .weather-strip {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            flex-wrap: wrap;
+            margin: -40px 20px 40px;
+            position: relative;
+            z-index: 2;
+        }
+        .weather-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 20px 28px;
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+            min-width: 150px;
+            transition: transform 0.3s;
+            border: 1px solid #e0f2fe;
+        }
+        .weather-card:hover { transform: translateY(-4px); }
+        .weather-card .city { font-weight: 700; font-size: 1.1rem; color: var(--text); }
+        .weather-card .temp { font-size: 2.2rem; font-weight: 800; color: var(--primary); margin: 8px 0; }
+        .weather-card .desc { font-size: 0.85rem; color: var(--text-light); }
+        .weather-card .icon { font-size: 2rem; margin-bottom: 4px; }
+
+        /* 主布局 */
+        .container { max-width: 1300px; margin: 0 auto; padding: 0 20px; }
+
+        .layout { display: flex; gap: 32px; margin-bottom: 40px; }
+        .sidebar { flex: 0 0 420px; }
+        .main-content { flex: 1; min-width: 0; }
+
+        @media (max-width: 1024px) {
+            .layout { flex-direction: column; }
+            .sidebar { flex: none; }
+        }
+
+        /* 地图容器 */
+        .map-wrapper {
+            position: sticky;
+            top: 20px;
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+        .map-wrapper .map-header {
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        .map-header .title { display: flex; align-items: center; gap: 8px; }
+        .region-switch {
+            display: flex;
+            gap: 6px;
+            background: #f1f5f9;
+            border-radius: 20px;
+            padding: 3px;
+        }
+        .region-btn {
+            padding: 5px 14px;
+            border: none;
+            background: transparent;
+            border-radius: 16px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .region-btn.active {
+            background: var(--gradient-aurora);
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(2, 132, 199, 0.3);
+        }
+        #map { width: 100%; height: 480px; }
+        .map-legend {
+            padding: 12px 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+        .legend-dot {
+            display: inline-block;
+            width: 10px; height: 10px;
+            border-radius: 50%;
+            margin-right: 4px;
+        }
+
+        /* 行程卡片 */
+        .day-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 24px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid var(--border);
+        }
+        .day-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        .day-header {
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+        }
+        .day-number {
+            width: 52px; height: 52px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #fff;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .day-info { flex: 1; }
+        .day-info h3 { font-size: 1.15rem; font-weight: 700; }
+        .day-info .day-date { font-size: 0.85rem; color: var(--text-light); margin-top: 2px; }
+        .day-route { font-size: 0.8rem; color: var(--text-light); margin-top: 2px; }
+        .day-region-tag {
+            font-size: 0.72rem;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .tag-hrb { background: #e0f2fe; color: #0369a1; }
+        .tag-cbs { background: #ede9fe; color: #6d28d9; }
+        .tag-cross { background: #ffedd5; color: #c2410c; }
+
+        .day-body { padding: 20px 24px; }
+
+        /* 景点卡片 */
+        .spot-list { display: flex; flex-direction: column; gap: 16px; }
+        .spot-card {
+            display: flex;
+            gap: 16px;
+            padding: 16px;
+            background: var(--gradient-card);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .spot-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 4px 16px rgba(2, 132, 199, 0.15);
+        }
+        .spot-card.active {
+            border-color: var(--primary);
+            background: linear-gradient(145deg, #f0f9ff 0%, #e0f2fe 100%);
+            box-shadow: 0 4px 16px rgba(2, 132, 199, 0.2);
+        }
+        .spot-img {
+            width: 120px; height: 90px;
+            border-radius: 8px;
+            object-fit: cover;
+            flex-shrink: 0;
+            background: var(--gradient-ice);
+        }
+        .spot-info { flex: 1; min-width: 0; }
+        .spot-info h4 { font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
+        .spot-info .spot-meta {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+        .spot-info .spot-meta span { display: flex; align-items: center; gap: 3px; }
+        .spot-info .spot-desc {
+            font-size: 0.82rem;
+            color: var(--text-light);
+            margin-top: 6px;
+            line-height: 1.5;
+        }
+        .spot-rating {
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+            background: #fef3c7;
+            color: #92400e;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .spot-level {
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+            background: #e0f2fe;
+            color: #0369a1;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .spot-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .btn-taxi {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 14px;
+            background: var(--gradient-aurora);
+            color: #fff;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 600;
+            white-space: nowrap;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-taxi:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.4);
+        }
+        .btn-taxi.small {
+            padding: 6px 12px;
+            font-size: 0.75rem;
+        }
+        .btn-taxi.warm {
+            background: var(--gradient-warm);
+        }
+        .btn-taxi.warm:hover {
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.4);
+        }
+        .btn-nav {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 14px;
+            background: #fff;
+            color: var(--primary);
+            border: 1.5px solid var(--primary);
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 600;
+            white-space: nowrap;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .btn-nav:hover {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        /* 交通信息 */
+        .transit-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            margin: 8px 0;
+            background: #f8fafc;
+            border-radius: 10px;
+            border: 1px dashed var(--border);
+            font-size: 0.82rem;
+            color: var(--text-light);
+            flex-wrap: wrap;
+        }
+        .transit-info.warm {
+            background: #fff7ed;
+            border-color: #fed7aa;
+            color: #9a3412;
+        }
+        .transit-info.shuttle {
+            background: #f5f3ff;
+            border-color: #ddd6fe;
+            color: #6d28d9;
+        }
+        .transit-arrow { color: var(--primary); font-weight: 700; font-size: 1.2rem; }
+        .transit-arrow.warm { color: var(--secondary); }
+        .transit-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: var(--primary);
+            flex-shrink: 0;
+        }
+        .transit-dot.warm { background: var(--secondary); }
+        .transit-dot.shuttle { background: #8b5cf6; }
+
+        /* 工具栏 */
+        .toolbar {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+        }
+        .btn-toolbar {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            text-decoration: none;
+        }
+        .btn-primary {
+            background: var(--gradient-aurora);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(2, 132, 199, 0.4);
+        }
+        .btn-outline {
+            background: #fff;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+        .btn-outline:hover {
+            background: var(--primary);
+            color: #fff;
+        }
+        .btn-gold {
+            background: var(--gradient-warm);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
+        }
+        .btn-gold:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(249, 115, 22, 0.4);
+        }
+
+        /* 页脚 */
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-light);
+            font-size: 0.85rem;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        /* 提示条 */
+        .tips-bar {
+            background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+            border-radius: var(--radius);
+            padding: 16px 24px;
+            margin-bottom: 24px;
+            border: 1px solid #7dd3fc;
+            font-size: 0.9rem;
+            color: #075985;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        .tips-bar.warm {
+            background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+            border-color: #fed7aa;
+            color: #9a3412;
+        }
+        .tips-bar .icon { font-size: 1.3rem; flex-shrink: 0; }
+
+        /* 加载动画 */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 480px;
+            color: var(--text-light);
+        }
+        .loading::after {
+            content: '';
+            width: 30px; height: 30px;
+            border: 3px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-left: 10px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        @media (max-width: 768px) {
+            .spot-card { flex-direction: column; }
+            .spot-img { width: 100%; height: 160px; }
+            .spot-actions { flex-direction: row; }
+            .hero { padding: 40px 16px 60px; }
+            .weather-strip { margin: -30px 12px 30px; }
+            .weather-card { min-width: 110px; padding: 14px 18px; }
+            .weather-card .temp { font-size: 1.6rem; }
+            .map-wrapper .map-header { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- 顶部横幅 -->
+<header class="hero">
+    <div class="hero-content">
+        <h1>❄️ 哈尔滨·长白山5天冰雪之旅</h1>
+        <p class="subtitle">冰城雪韵 → 长白圣山 | 一月冰雪奇缘经典路线</p>
+        <div class="date-badge">📅 2027年1月15日 — 1月19日 · 深冬雪季</div>
+    </div>
+</header>
+
+<!-- 天气概览 -->
+<div class="weather-strip">
+    <div class="weather-card">
+        <div class="icon">🌨️</div>
+        <div class="city">哈尔滨</div>
+        <div class="temp">-25°~-13°</div>
+        <div class="desc">晴冷干燥 · 银装素裹</div>
+    </div>
+    <div class="weather-card">
+        <div class="icon">⛰️</div>
+        <div class="city">长白山</div>
+        <div class="temp">-30°~-15°</div>
+        <div class="desc">多雪严寒 · 雾凇奇观</div>
+    </div>
+    <div class="weather-card">
+        <div class="icon">🌬️</div>
+        <div class="city">天池</div>
+        <div class="temp">-35°~-20°</div>
+        <div class="desc">大风 · 视天气开放</div>
+    </div>
+</div>
+
+<div class="container">
+    <!-- 工具栏 -->
+    <div class="toolbar">
+        <a href="https://uri.amap.com/navigation?to=126.627215,45.770125&via=126.617682,45.774835&mode=car&callnative=1" class="btn-toolbar btn-gold" target="_blank">
+            📱 高德地图查看哈尔滨行程
+        </a>
+        <a href="https://uri.amap.com/navigation?to=128.077204,42.093024&via=128.187444,42.184631|128.070873,42.025816|128.061574,42.041602|128.067218,42.061603&mode=car&callnative=1" class="btn-toolbar btn-primary" target="_blank">
+            📱 高德地图查看长白山行程
+        </a>
+        <button class="btn-toolbar btn-outline" onclick="scrollToDay(1)">📋 查看详细行程</button>
+    </div>
+
+    <!-- 提示 -->
+    <div class="tips-bar">
+        <span class="icon">🧣</span>
+        <div>
+            <strong>一月出行提示：</strong>哈尔滨、长白山一月为深冬雪季，气温普遍在-20°C以下，需备齐羽绒服、保暖内衣、雪地靴、帽子手套。天池开放受大风降雪影响，建议提前查询景区公告。同一天行程景区之间可选择<strong>打车</strong>出行，点击各景点的"🚕 打车"按钮即可唤起高德地图打车。Day3哈尔滨飞长白山转场，Day4长白山景区内需乘环保车。
+        </div>
+    </div>
+
+    <!-- 双栏布局 -->
+    <div class="layout">
+        <!-- 左侧：地图 -->
+        <aside class="sidebar">
+            <div class="map-wrapper">
+                <div class="map-header">
+                    <div class="title">🗺️ 旅行路线地图</div>
+                    <div class="region-switch">
+                        <button class="region-btn active" onclick="showRegion('harbin')">📍 哈尔滨</button>
+                        <button class="region-btn" onclick="showRegion('cbs')">🏔️ 长白山</button>
+                    </div>
+                </div>
+                <div id="map"><div class="loading">地图加载中</div></div>
+                <div class="map-legend">
+                    <span><span class="legend-dot" style="background:#0ea5e9;"></span> Day1</span>
+                    <span><span class="legend-dot" style="background:#06b6d4;"></span> Day2</span>
+                    <span><span class="legend-dot" style="background:#f97316;"></span> Day3</span>
+                    <span><span class="legend-dot" style="background:#8b5cf6;"></span> Day4</span>
+                    <span><span class="legend-dot" style="background:#ec4899;"></span> Day5</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- 右侧：行程 -->
+        <main class="main-content" id="itinerary">
+            <!-- Day 1 -->
+            <div class="day-card" id="day1">
+                <div class="day-header" onclick="focusDay(0)">
+                    <div class="day-number" style="background: var(--gradient-aurora);">1</div>
+                    <div class="day-info">
+                        <h3>抵达冰城 · 中央大街 · 索菲亚教堂</h3>
+                        <div class="day-date">1月15日 周五 | 哈尔滨</div>
+                        <div class="day-route">✈️ 太平机场 → 🛍️ 中央大街 → ⛪ 圣索菲亚教堂</div>
+                    </div>
+                    <span class="day-region-tag tag-hrb">哈尔滨</span>
+                </div>
+                <div class="day-body">
+                    <div class="spot-list">
+                        <div class="spot-card" data-spot="airport-hrb" onclick="focusSpot('airport-hrb')">
+                            <img class="spot-img" src="http://store.is.autonavi.com/showpic/6eae773dc2ea8f8e524689927238f299" alt="哈尔滨太平国际机场" onerror="this.style.background='var(--gradient-ice)'">
+                            <div class="spot-info">
+                                <h4>✈️ 哈尔滨太平国际机场 (HRB)</h4>
+                                <div class="spot-meta">
+                                    <span>📍 迎宾路</span>
+                                </div>
+                                <div class="spot-desc">抵达冰城哈尔滨，建议选择上午航班，下午开始游玩。机场距市区约40公里，可乘机场大巴或打车前往中央大街。</div>
+                            </div>
+                        </div>
+                        <div class="transit-info">
+                            <span class="transit-dot"></span> 打车约50分钟 · 约40公里 <span class="transit-arrow">→</span>
+                            <a href="https://uri.amap.com/taxi?to=126.617682,45.774835&callnative=1" class="btn-taxi small" target="_blank">🚕 打车到中央大街</a>
+                        </div>
+                        <div class="spot-card" data-spot="zhongyang" onclick="focusSpot('zhongyang')">
+                            <img class="spot-img" src="http://store.is.autonavi.com/showpic/55a8f05aa310f8cad7ca0ae6" alt="中央大街" onerror="this.style.background='var(--gradient-ice)'">
+                            <div class="spot-info">
+                                <h4>🛍️ 哈尔滨中央大街</h4>
+                                <div class="spot-meta">
+                                    <span class="spot-rating">⭐ 4.9</span>
+                                    <span>📍 中央大街1号</span>
+                                    <span>🕐 24小时开放</span>
+                                </div>
+                                <div class="spot-desc">亚洲最长步行街，百年欧式建筑林立。深冬时节银装素裹，马迭尔冰棍、俄式红肠不可错过。傍晚灯火璀璨，是感受冰城风情的第一站。</div>
+                            </div>
+                            <div class="spot-actions">
+                                <a href="https://uri.amap.com/navigation?to=126.617682,45.774835&mode=car&callnative=1" class="btn-taxi" target="_blank">🚕 打车前往</a>
+                                <a href="https://uri.amap.com/navigation?to=126.617682,45.774835&mode=car&callnative=1" class="btn-nav" target="_blank">🧭 导航</a>
+                            </div>
+                        </div>
+                        <div class="transit-info">
+                            <span class="transit-dot"></span> 步行约8分钟 · 约700米 <span class="transit-arrow">→</span>
+                            <a href="https://uri.amap.com/taxi?to=126.627215,45.770125&callnative=1" class="btn-taxi small" target="_blank">🚕 打车到索菲亚</a>
+                        </div>
+                        <div class="spot-card" data-spot="sophia" onclick="focusSpot('sophia')">
+                            <img class="spot-img" src="http://store.is.autonavi.com/showpic/9017b04f94476397a6d48ddb8ca75b5a" alt="圣索菲亚教堂" onerror="this.style.background='var(--gradient-ice)'">
+                            <div class="spot-info">
+                                <h4>⛪ 圣·索菲亚教堂</h4>
+                                <div class="spot-meta">
+                                    <span class="spot-rating">⭐ 4.9</span>
+                                    <span class="spot-level">4A景区</span>
+                                    <span>🕐 08:30-21:00</span>
+                                </div>
+                                <div class="spot-desc">远东最大东正教教堂，拜占庭风格洋葱头穹顶。夜晚灯光映照雪景格外梦幻，内部为哈尔滨建筑艺术博物馆。建议傍晚前往拍夜景。</div>
+                            </div>
+                            <div class="spot-actions">
+                                <a href="https://uri.amap.com/navigation?to=126.627215,45.770125&mode=car&callnative=1" class="btn-taxi" target="_blank">🚕 打车前往</a>
+                                <a href="https://uri.amap.com/navigation?to=126.627215,45.770125&mode=car&callnative=1" class="btn-nav" target="_blank">🧭 导航</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Day 2 -->
+            <div class="day-card" id="day2">
+                <div class="day-header" onclick="focusDay(1)">
+                    <div class="day-number" style="background: linear-gradient(135deg, #06b6d4, #0891b2);">2</div>
+                    <div class="day-info">
+                        <h3>太阳岛雪博会 · 冰雪大世界</h3>
+                        <div class="day-date">1月16日 周六 | 哈尔滨</div>
+                        <div class="day-route">☀️ 太阳岛雪博会 → 🏔️ 冰雪大世界（夜景）</div>
+                    </div>
+                    <span class="day-region-tag tag-hrb">哈尔滨</span>
+                </div>
+                <div class="day-body">
+                    <div class="spot-list">
+                        <div class="spot-card" data-spot="taiyang" onclick="focusSpot('taiyang')">
+                            <img class="spot-img" src="http://store.is.autonavi.com/showpic/047b38e5d58349b5af2785b2a206f7a2" alt="太阳岛风景区" onerror="this.style.background='var(--gradient-ice)'">
+                            <div class="spot-info">
+                                <h4>☀️ 太阳岛风景区（雪博会）</h4>
+                                <div class="spot-meta">
+                                    <span class="spot-rating">⭐ 4.8</span>
+                                    <span class="spot-level">5A景区</span>
+                                    <span>🕐 08:30-17:00</span>
+                                </div>
+                                <div class="spot-desc">冬季举办国际雪雕艺术博览会，巨型雪雕群震撼壮观。与冰雪大世界的冰雕互补，是白天赏雪雕的最佳去处。建议上午游玩3-4小时。</div>
+                            </div>
+                            <div class="spot-actions">
+                                <a href="https://uri.amap.com/navigation?to=126.597880,45.791584&mode=car&callnative=1" class="btn-taxi" target="_blank">🚕 打车前往</a>
+                                <a href="https://uri.amap.com/navigation?to=126.597880,45.791584&mode=car&callnative=1" class="btn-nav" target="_blank">🧭 导航</a>
+                            </div>
+                        </div>
+                        <div class="transit-info">
+                            <span class="transit-dot"></span> 打车约10分钟 · 约5公里 <span class="transit-arrow">→</span>
+                            <a href="https://uri.amap.com/taxi?to=126.562459,45.777005&callnative=1" class="btn-taxi small" target="_blank">🚕 打车到冰雪大世界</a>
+                        </div>
+                        <div class="spot-card" data-spot="bingxue" onclick="focusSpot('bingxue')">
+                            <img class="spot-img" src="http://store.is.autonavi.com/showpic/f375de63f64526d790c78b1272f9709e" alt="哈尔滨冰雪大世界" onerror="this.style.background='var(--gradient-ice)'">
+                            <div class="spot-info">
+                                <h4>🏔️ 哈尔滨冰雪大世界</h4>
+                                <div class="spot-meta">
+                                    <span class="spot-rating">⭐ 4.8</span>
+                                    <span>🕐 11:00-21:30（日落后灯光最佳）</span>
+                                </div>
+                                <div class="spot-desc">世界最大冰雪主题乐园，巨型冰建建筑配彩灯璀璨夺目。大滑梯、冰雕、雪地摩托刺激好玩。建议下午入园，看日落亮灯全过程，游玩5-6小时。</div>
+                            </div>
+                            <div class="spot-actions">
+                                <a href="https://uri.amap.com/navigation?to=126.562459,45.777005&mode=car&callnative=1" class="btn-taxi" target="_blank">🚕 打车前往</a>
+                                <a href="https://uri.amap.com/navigation?to=126.562459,45.777005&mode=car&callnative=1" class="btn-nav" target="_blank">🧭 导航</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tips-bar" style="margin-top:12px; margin-bottom:0;">
+                        <span class="icon">❄️</span>
+                        <div><strong>保暖提醒：</strong>冰雪大世界为露天冰景，体感温度可达-30°C以下，务必穿长款羽绒服、戴面罩和暖宝宝。园区内可租借防寒服。</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Day 3 -->
+            <div class="day-card" id="day3">
+                <div class="day-header" onclick="focusDay(2)">
+                    <div class="day-number" style="background: var(--gradient-warm);">3</div>
+                    <div class="day-info">
+                        <h3>东北虎林园 · 飞往长白山</h3>
+                        <div class="day-date">1月17日 周日 | 哈尔滨 → 长白山</div>
+                        <div class="day-route">🐯 东北虎林园 → ✈️ 太平机场 → 长白山机场 → 二道白河</div>
+                    </div>
+                    <span class="day-region-tag tag-cross">跨城转场</span>
+                </div>
+                <div class="day-body">
+                    <div class="spot-list">
+                        <div class="spot-card" data-spot="hulin" onclick="focusSpot('hulin')">
+                            <img class="spot-img" src="http://store.is.autonavi.com/showpic/bd6da177a9b75316e41dee48a9733307" alt="东北虎林园" onerror="this.style.background='var(--gradient-ice)'">
+                            <div class="spot-info">
+                                <h4>🐯 东北虎林园</h4>
+                                <div class="spot-meta">
+                                    <span class="spot-rating">⭐ 4.8</span>
+                                    <span class="spot-level">4A景区</span>
+                                    <span>🕐 08:30-16:00</span>
+                                </div>
+                                <div class="spot-desc">世界最大东北虎繁育基地，乘惊险车近距离观虎。冬季雪地观虎别具风情，老虎毛色更加浓密。建议上午游玩2-3小时后前往机场。</div>
+                            </div>
+                            <div class="spot-actions">
+                                <a href="https://uri.amap.com/navigation?to=126.600650,45.817483&mode=car&callnative=1" class="btn-taxi" target="_blank">🚕 打车前往</a>
+                                <a href="https://uri.amap.com/navigation?to=126.600650,45.817483&mode=car&callnative=1" class="btn-nav" target="_blank">🧭 导航</a>
+                            </div>
+                        </div>
+                        <div class="transit-info warm">
+                            <span class="transit-dot warm"></span> 打车约50分钟 · 约45公里 <span class="transit-arrow warm">→</span>
+                            <a href="https://uri.amap.com/taxi?to=126.241474,45.611938&callnative=1" class="btn-taxi small warm" target="_blank">🚕 打车到太平机场</a>
+                        </div>
+                        <div class="spot-card" data-spot="airport-hrb2" onclick="focusSpot('airport-hrb')">
+                            <img class="spot-img" src="http://store.is.autonavi.com/showpic/6eae773dc2ea8f8e524689927238f299" alt="哈尔滨太平国际机场" onerror="this.style.background='var(--gradient-ice)'">
+                            <div class="spot-info">
+                                <h4>✈️ 哈尔滨太平国际机场 (HRB)</h4>
+                                <div class="spot-meta">
+                                    <span>📍 飞往长白山</span>
+                                </div>
+                                <div class="spot-desc">乘机飞往长白山（哈尔滨→长白山机场，飞行约1.5小时）。建议选下午航班，上午游玩虎林园。冬季航班易受天气影响，请留意动态。</div>
+                            </div>
+                        </div>
+                        <div class="transit-info warm">
+                            <span class="transit-dot warm"></span> ✈️ 飞行约1.5小时 · 哈尔滨太平 → 白山长白山 <span class="transit-arrow warm">→</span>
+                        </div>
+                        <div class="spot-card" data-spot="airport-cbs" onclick="focusSpot('airport-cbs')">
+                            <img class="spot-img" src="https://aos-comment.amap.com/B01B70M3XZ/comment/7A34A0FF_016D_4BC5_A031_FED605667B31_L0_001_1500_200_1771748790542_68194154.jpg" alt="白山长白山机场" onerror="this.style.background='var(--gradient-ice)'">
+                            <div class="spot-info">
+                                <h4>✈️ 白山长白山机场 (NBS)</h4>
+                                <div class="spot-meta">
+                                    <span>📍 松江河镇</span>
+                                </div>
+                                <div class="spot-desc">抵达长白山机场，距二道白河镇约80公里。可乘机场大巴或打车前往二道白河镇入住，为次日北坡游览做准备。</div>
+                            </div>
+                            <div class="spot-actions">
+                                <a href="https://uri.amap.com/navigation?to=127.610068,42.068365&mode=car&callnative=1" class="btn-taxi" target="_blank">🚕 打车前往</a>
+                                <a href="https://uri.amap.com/navigation?to=127.610068,42.068365&mode=car&callnative=1" class="btn-nav" target="_blank">🧭 导航</a>
+                            </div>
+                        </div>
+                        <div class="transit-info">
+                            <span class="transit-dot"></span> 打车约1.5小时 · 约80公里 <span class="transit-arrow">→</span>
+                            <a href="https://uri.amap.com/taxi?to=128.187444,42.184631&callnative=1" class="btn-taxi small" target="_blank">🚕 打车到二道白河</a>
+                        </div>
+                        <div class="spot-card" data-spot="beijingqu" onclick="focusSpot('beijingqu')">
+                            <img class="spot-img" src="http://store.is.autonavi.com/showpic/8f21d8ad1ce59e8d712aa336e37a0d94" alt="长白山北景区" onerror="this.style.background='var(--gradient-ice)'">
+                            <div class="spot-info">
+                                <h4>🏨 二道白河镇（北景区山门）</h4>
+                                <div class="spot-meta">
+                                    <span class="spot-rating">⭐ 4.7</span>
+                                    <span>📍 长白山池北区</span>
+                                </div>
+                                <div class="spot-desc">长白山北坡门户小镇，镇内温泉酒店林立。当晚入住二道白河，泡火山温泉驱寒，为次日登顶天池养精蓄锐。</div>
+                            </div>
+                            <div class="spot-actions">
+                                <a href="https://uri.amap.com/navigation?to=128.187444,42.184631&mode=car&callnative=1" class="btn-taxi" target="_blank">🚕 打车前往</a>
+                                <a href="https://uri.amap.com/navigation?to=128.187444,42.184631&mode=car&callnative=1" class="btn-nav" target="_blank">🧭 导航</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tips-bar warm" style="margin-top:12px; margin-bottom:0;">
+                        <span class="icon">✈️</span>
+                        <div><strong>转场提示：</strong>哈尔滨飞长白山航班每日1-2班，冬季易因降雪延误，建议预留弹性时间。若航班取消可改乘高铁（哈尔滨→长春→长白山，约6-8小时）。</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Day 4 -->
+            <div class="day-card" id="day4">
+                <div class="day-header" onclick="focusDay(3)">
+                    <div class="day-number" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">4</div>
+                    <div class="day-info">
+                        <h3>长白山北坡 · 天池圣境</h3>
+                        <div class="day-date">1月18日 周一 | 长白山</div>
+                        <div class="day-route">🚪 北景区 → 🌋 天池 → 💦 长白瀑布 → 💎 绿渊潭 → 🌲 地下森林</div>
+                    </div>
+                    <span class="day-region-tag tag-cbs">长白山</span>
+                </div>
+                <div class="day-body">
+                    <div class="spot-list">
+                        <div class="spot-card" data-spot="beijingqu2" onclick="focusSpot('beijingqu')">
+                            <img class="spot-img" src="http://store.is.autonavi.com/showpic/8f21d8ad1ce59e8d712aa336e37a0d94" alt="长白山北景区山门" onerror="this.style.background='var(--gradient-ice)'">
+                            <div class="spot-info">
+                                <h4>🚪 长白山北景区山门</h4>
+                                <div class="spot-meta">
+                                    <span class="spot-rating">⭐ 4.7</span>
+                                    <span>🕐 07:30-18:00</span>
+                                </div>
+                                <div class="spot-desc">北坡入口，购买门票+环保车票后乘车上山。冬季建议早7:30入园，避开人流。天池是否开放视当日天气，请关注景区公告。</div>
+                            </div>
+                            <div class="spot-actions">
+                                <a href="https://uri.amap.com/navigation?to=128.187444,42.184631&mode=car&callnative=1" class="btn-taxi" target="_blank">🚕 打车前往</a>
+                                <a href="https://uri.amap.com/navigation?to=128.187444,42.184631&mode=car&callnative=1" class="btn-nav" target="_blank">🧭 导航</a>
+                            </div>
+                        </div>
+                        <div class="transit-info shuttle">
+                            <span class="transit-dot shuttle"></span> 景区环保车约30分钟 · 换乘倒站车上主峰 <span class="transit-arrow">→</span>
+                        </div>
+                        <div class="spot-card" data-spot="tianchi" onclick="focusSpot('tianchi')">
+                            <img class="spot-img" src="http://store.is.autonavi.com/showpic/3e48da8686b549930d2def282a53f6a8" alt="长白山天池" onerror="this.style.background='var(--gradient-ice)'">
+                            <div class="spot-info">
+                                <h4>🌋 长白山天池</h4>
+                                <div class="spot-meta">
+                                    <span class="spot-rating">⭐ 4.7</span>
+                                    <span>🕐 07:10-19:00</span>
+                                </div>
+                                <div class="spot-desc">中国最深火山湖，海拔2189米。冬季冰封雪裹，银白圣洁，堪称人间仙境。需乘倒站车登顶，山顶大风极寒，务必全副武装。开放与否视天气而定。</div>
+                            </div>
+                            <div class="spot-actions">
+                                <a href="https://uri.amap.com/navigation?to=128.070873,42.025816&mode=car&callnative=1" class="btn-taxi" target="_blank">🚕 打车前往</a>
+                                <a href="https://uri.amap.com/navigation?to=128.070873,42.025816&mode=car&callnative=1" class="btn-nav" target="_blank">🧭 导航</a>
+                            </div>
+                        </div>
+                        <div class="transit-info shuttle">
+                            <span class="transit-dot shuttle"></span> 环保车约15分钟 · 天池下山路过 <span class="transit-arrow">→</span>
+                            <a href="https://uri.amap.com/taxi?to=128.061574,42.041602&callnative=1" class="btn-taxi small" target="_blank">🚕 打车到瀑布</a>
+                        </div>
+                        <div class="spot-card" data-spot="pubu" onclick="focusSpot('pubu')">
+                            <img class="spot-img" src="https://aos-comment.amap.com/B05990MBIB/comment/content_media_external_images_media_85819_ss__1727131484849_58942974.jpg" alt="长白山瀑布" onerror="this.style.background='var(--gradient-ice)'">
+                            <div class="spot-info">
+                                <h4>💦 长白山瀑布</h4>
+                                <div class="spot-meta">
+                                    <span class="spot-rating">⭐ 4.1</span>
+                                    <span>🕐 08:30-16:00</span>
+                                </div>
+                                <div class="spot-desc">长白山天池水倾泻而成，落差68米的高山瀑布。冬季部分结冰形成冰瀑奇观，水汽凝结成雾凇，景色壮丽。沿栈道步行可观聚龙温泉群。</div>
+                            </div>
+                            <div class="spot-actions">
+                                <a href="https://uri.amap.com/navigation?to=128.061574,42.041602&mode=car&callnative=1" class="btn-taxi" target="_blank">🚕 打车前往</a>
+                                <a href="https://uri.amap.com/navigation?to=128.061574,42.041602&mode=car&callnative=1" class="btn-nav" target="_blank">🧭 导航</a>
+                            </div>
+                        </div>
+                        <div class="transit-info shuttle">
+                            <span class="transit-dot shuttle"></span> 环保车约10分钟 <span class="transit-arrow">→</span>
+                            <a href="https://uri.amap.com/taxi?to=128.067218,42.061603&callnative=1" class="btn-taxi small" target="_blank">🚕 打车到绿渊潭</a>
+                        </div>
+                        <div class="spot-card" data-spot="lvyuan" onclick="focusSpot('lvyuan')">
+                            <img class="spot-img" src="https://aos-comment.amap.com/B0FFF366EA/comment/MVIMG_20260117_13195_1769037415221_79754114.jpg" alt="绿渊潭" onerror="this.style.background='var(--gradient-ice)'">
+                            <div class="spot-info">
+                                <h4>💎 绿渊潭</h4>
+                                <div class="spot-meta">
+                                    <span class="spot-rating">⭐ 4.2</span>
+                                    <span>🕐 08:30-13:30</span>
+                                </div>
+                                <div class="spot-desc">一汪碧绿水潭，飞瀑入水雾气氤氲，被誉为"东北小九寨"。冬季冰瀑与未冻结的绿水相映，别有韵味。拍照打卡绝佳地。</div>
+                            </div>
+                            <div class="spot-actions">
+                                <a href="https://uri.amap.com/navigation?to=128.067218,42.061603&mode=car&callnative=1" class="btn-taxi" target="_blank">🚕 打车前往</a>
+                                <a href="https://uri.amap.com/navigation?to=128.067218,42.061603&mode=car&callnative=1" class="btn-nav" target="_blank">🧭 导航</a>
+                            </div>
+                        </div>
+                        <div class="transit-info shuttle">
+                            <span class="transit-dot shuttle"></span> 环保车约15分钟 <span class="transit-arrow">→</span>
+                            <a href="https://uri.amap.com/taxi?to=128.077204,42.093024&callnative=1" class="btn-taxi small" target="_blank">🚕 打车到地下森林</a>
+                        </div>
+                        <div class="spot-card" data-spot="dixia" onclick="focusSpot('dixia')">
+                            <img class="spot-img" src="https://aos-comment.amap.com/B05990MJFX/comment/75F2ECA2_D857_463A_8B5B_C8A74097E93F_L0_001_1500_2000_1736599598613_84967384.jpg" alt="地下森林" onerror="this.style.background='var(--gradient-ice)'">
+                            <div class="spot-info">
+                                <h4>🌲 地下森林（谷底林海）</h4>
+                                <div class="spot-meta">
+                                    <span class="spot-rating">⭐ 4.2</span>
+                                    <span>🕐 随景区开放</span>
+                                </div>
+                                <div class="spot-desc">火山口塌陷形成的原始森林，沿栈道深入谷底，古木参天。冬季白雪覆盖针叶林，静谧幽深，是北坡最后一站，游玩约1小时。</div>
+                            </div>
+                            <div class="spot-actions">
+                                <a href="https://uri.amap.com/navigation?to=128.077204,42.093024&mode=car&callnative=1" class="btn-taxi" target="_blank">🚕 打车前往</a>
+                                <a href="https://uri.amap.com/navigation?to=128.077204,42.093024&mode=car&callnative=1" class="btn-nav" target="_blank">🧭 导航</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tips-bar" style="margin-top:12px; margin-bottom:0;">
+                        <span class="icon">⚠️</span>
+                        <div><strong>天池开放：</strong>天池主峰冬季大风频繁，开放概率约50%，请关注"长白山"官方公众号查询当日是否开放。景区内各景点间需乘环保车（已含在门票内），景点卡片打车按钮仅供应急或镇内使用。</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Day 5 -->
+            <div class="day-card" id="day5">
+                <div class="day-header" onclick="focusDay(4)">
+                    <div class="day-number" style="background: linear-gradient(135deg, #ec4899, #db2777);">5</div>
+                    <div class="day-info">
+                        <h3>温泉晨泡 · 长白山返程</h3>
+                        <div class="day-date">1月19日 周二 | 长白山</div>
+                        <div class="day-route">♨️ 二道白河温泉 → ✈️ 长白山机场返程</div>
+                    </div>
+                    <span class="day-region-tag tag-cbs">长白山</span>
+                </div>
+                <div class="day-body">
+                    <div class="spot-list">
+                        <div class="spot-card" data-spot="beijingqu3" onclick="focusSpot('beijingqu')">
+                            <img class="spot-img" src="http://store.is.autonavi.com/showpic/8f21d8ad1ce59e8d712aa336e37a0d94" alt="二道白河温泉" onerror="this.style.background='var(--gradient-ice)'">
+                            <div class="spot-info">
+                                <h4>♨️ 二道白河火山温泉</h4>
+                                <div class="spot-meta">
+                                    <span>📍 长白山池北区</span>
+                                    <span>🕐 06:00-23:00</span>
+                                </div>
+                                <div class="spot-desc">晨起泡一池火山地热温泉，冰天雪地中感受冰火两重天，洗去前日登山的疲惫。镇内多家温泉酒店可选，聚龙火山温泉为佳。</div>
+                            </div>
+                            <div class="spot-actions">
+                                <a href="https://uri.amap.com/navigation?to=128.187444,42.184631&mode=car&callnative=1" class="btn-taxi" target="_blank">🚕 打车前往</a>
+                                <a href="https://uri.amap.com/navigation?to=128.187444,42.184631&mode=car&callnative=1" class="btn-nav" target="_blank">🧭 导航</a>
+                            </div>
+                        </div>
+                        <div class="transit-info">
+                            <span class="transit-dot"></span> 打车约1.5小时 · 约80公里 <span class="transit-arrow">→</span>
+                            <a href="https://uri.amap.com/taxi?to=127.610068,42.068365&callnative=1" class="btn-taxi small" target="_blank">🚕 打车到长白山机场</a>
+                        </div>
+                        <div class="spot-card" data-spot="airport-cbs2" onclick="focusSpot('airport-cbs')">
+                            <img class="spot-img" src="https://aos-comment.amap.com/B01B70M3XZ/comment/7A34A0FF_016D_4BC5_A031_FED605667B31_L0_001_1500_200_1771748790542_68194154.jpg" alt="白山长白山机场" onerror="this.style.background='var(--gradient-ice)'">
+                            <div class="spot-info">
+                                <h4>✈️ 白山长白山机场 (NBS)</h4>
+                                <div class="spot-meta">
+                                    <span>📍 返程</span>
+                                </div>
+                                <div class="spot-desc">建议选择下午航班返程，上午可泡温泉或在二道白河镇逛美人松公园。结束5天冰雪之旅，带着冰城雪域的美好记忆回家。</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tips-bar warm" style="margin-top:12px; margin-bottom:0;">
+                        <span class="icon">🚕</span>
+                        <div><strong>返程交通：</strong>二道白河到长白山机场约80公里，打车约1.5小时，建议提前预约车辆或乘坐机场大巴。冬季路滑请预留充足时间。</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<footer class="footer">
+    <p>❄️ 哈尔滨·长白山5天冰雪旅行攻略 | 数据来源：高德地图 | 路线：哈尔滨 → 长白山</p>
+    <p style="margin-top:4px;">同一天景区间打车请使用高德地图APP扫码或点击"🚕 打车"按钮</p>
+</footer>
+
+<script>
+    window._AMapSecurityConfig = { securityJsCode: 'ca4b0e2c5cd68996aeb1a1646ace8283' };
+
+    var map = null;
+    var markers = [];
+    var polylines = [];
+    var currentRegion = 'harbin';
+    var dayColors = ['#0ea5e9', '#06b6d4', '#f97316', '#8b5cf6', '#ec4899'];
+
+    // 景点数据：region 区域分组，day 行程天序
+    var spotData = {
+        'airport-hrb': { name: '哈尔滨太平国际机场', lng: 126.241474, lat: 45.611938, day: 0, region: 'harbin', icon: '✈️' },
+        'zhongyang': { name: '中央大街', lng: 126.617682, lat: 45.774835, day: 0, region: 'harbin', icon: '🛍️' },
+        'sophia': { name: '圣·索菲亚教堂', lng: 126.627215, lat: 45.770125, day: 0, region: 'harbin', icon: '⛪' },
+        'taiyang': { name: '太阳岛风景区', lng: 126.597880, lat: 45.791584, day: 1, region: 'harbin', icon: '☀️' },
+        'bingxue': { name: '哈尔滨冰雪大世界', lng: 126.562459, lat: 45.777005, day: 1, region: 'harbin', icon: '🏔️' },
+        'hulin': { name: '东北虎林园', lng: 126.600650, lat: 45.817483, day: 2, region: 'harbin', icon: '🐯' },
+        'airport-hrb2': { name: '哈尔滨太平国际机场', lng: 126.241474, lat: 45.611938, day: 2, region: 'harbin', icon: '✈️' },
+        'airport-cbs': { name: '白山长白山机场', lng: 127.610068, lat: 42.068365, day: 2, region: 'cbs', icon: '✈️' },
+        'beijingqu': { name: '长白山北景区山门', lng: 128.187444, lat: 42.184631, day: 2, region: 'cbs', icon: '🚪' },
+        'beijingqu2': { name: '长白山北景区山门', lng: 128.187444, lat: 42.184631, day: 3, region: 'cbs', icon: '🚪' },
+        'tianchi': { name: '长白山天池', lng: 128.070873, lat: 42.025816, day: 3, region: 'cbs', icon: '🌋' },
+        'pubu': { name: '长白山瀑布', lng: 128.061574, lat: 42.041602, day: 3, region: 'cbs', icon: '💦' },
+        'lvyuan': { name: '绿渊潭', lng: 128.067218, lat: 42.061603, day: 3, region: 'cbs', icon: '💎' },
+        'dixia': { name: '地下森林', lng: 128.077204, lat: 42.093024, day: 3, region: 'cbs', icon: '🌲' },
+        'beijingqu3': { name: '二道白河温泉', lng: 128.187444, lat: 42.184631, day: 4, region: 'cbs', icon: '♨️' },
+        'airport-cbs2': { name: '白山长白山机场', lng: 127.610068, lat: 42.068365, day: 4, region: 'cbs', icon: '✈️' }
+    };
+
+    function initMap() {
+        map = new AMap.Map('map', {
+            zoom: 11,
+            center: [126.6, 45.78],
+            mapStyle: 'amap://styles/light',
+            resizeEnable: true
+        });
+
+        addMarkers();
+        drawRoutes();
+        showRegion('harbin');
+    }
+
+    function addMarkers() {
+        // 去重标记点（相同坐标只画一个 marker）
+        var drawn = {};
+        Object.keys(spotData).forEach(function(key) {
+            var spot = spotData[key];
+            var coordKey = spot.lng + ',' + spot.lat;
+            if (drawn[coordKey]) return;
+            drawn[coordKey] = true;
+
+            var color = dayColors[spot.day];
+            var markerContent = '<div style="background:' + color + ';color:#fff;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 2px 8px rgba(0,0,0,0.25);border:2px solid #fff;">' + spot.icon + '</div>';
+
+            var marker = new AMap.Marker({
+                position: [spot.lng, spot.lat],
+                content: markerContent,
+                title: spot.name,
+                offset: new AMap.Pixel(-16, -16),
+                zIndex: 100,
+                extData: { key: key }
+            });
+
+            marker.on('click', function(e) {
+                var d = e.target.getExtData();
+                focusSpot(d.key);
+            });
+
+            marker.setMap(map);
+            markers.push(marker);
+        });
+    }
+
+    function drawRoutes() {
+        // 同一天内打车/观光车路线（跨城飞机不画线）
+        var dayRoutes = [
+            // Day1: 机场→中央大街→索菲亚
+            { from: 'airport-hrb', to: 'zhongyang', style: 'solid', day: 0 },
+            { from: 'zhongyang', to: 'sophia', style: 'dashed', day: 0 },
+            // Day2: 太阳岛→冰雪大世界
+            { from: 'taiyang', to: 'bingxue', style: 'solid', day: 1 },
+            // Day3: 虎林园→太平机场（打车），长白山机场→二道白河（打车）
+            { from: 'hulin', to: 'airport-hrb2', style: 'solid', day: 2 },
+            { from: 'airport-cbs', to: 'beijingqu', style: 'solid', day: 2 },
+            // Day4: 长白山北坡景区内观光车路线
+            { from: 'beijingqu2', to: 'tianchi', style: 'dashed', day: 3 },
+            { from: 'tianchi', to: 'pubu', style: 'dashed', day: 3 },
+            { from: 'pubu', to: 'lvyuan', style: 'dashed', day: 3 },
+            { from: 'lvyuan', to: 'dixia', style: 'dashed', day: 3 },
+            // Day5: 二道白河→长白山机场
+            { from: 'beijingqu3', to: 'airport-cbs2', style: 'solid', day: 4 }
+        ];
+
+        dayRoutes.forEach(function(route) {
+            var from = spotData[route.from];
+            var to = spotData[route.to];
+            var color = dayColors[route.day];
+
+            var polyline = new AMap.Polyline({
+                path: [[from.lng, from.lat], [to.lng, to.lat]],
+                strokeColor: color,
+                strokeWeight: 3,
+                strokeOpacity: 0.75,
+                strokeStyle: route.style,
+                lineJoin: 'round',
+                zIndex: 50
+            });
+            polyline.setMap(map);
+            polylines.push(polyline);
+        });
+    }
+
+    // 按区域显示
+    function showRegion(region) {
+        if (!map) return;
+        currentRegion = region;
+        document.querySelectorAll('.region-btn').forEach(function(btn) {
+            btn.classList.remove('active');
+        });
+        // 通过文本匹配激活按钮
+        var targetText = region === 'harbin' ? '哈尔滨' : '长白山';
+        document.querySelectorAll('.region-btn').forEach(function(btn) {
+            if (btn.textContent.indexOf(targetText) > -1) btn.classList.add('active');
+        });
+
+        var positions = Object.keys(spotData)
+            .filter(function(k) { return spotData[k].region === region; })
+            .map(function(k) { return [spotData[k].lng, spotData[k].lat]; });
+        if (positions.length > 0) {
+            map.setFitView(positions, false, [60, 60, 60, 60]);
+        }
+    }
+
+    function focusSpot(key) {
+        var spot = spotData[key];
+        if (!spot || !map) return;
+        // 跨区域时自动切换
+        if (spot.region !== currentRegion) {
+            showRegion(spot.region);
+        }
+        map.setZoomAndCenter(14, [spot.lng, spot.lat]);
+
+        var infoWindow = new AMap.InfoWindow({
+            content: '<div style="padding:8px 12px;font-size:14px;font-weight:600;">' + spot.name + '</div>',
+            offset: new AMap.Pixel(0, -40)
+        });
+        infoWindow.open(map, [spot.lng, spot.lat]);
+        setTimeout(function() { infoWindow.close(); }, 2200);
+
+        document.querySelectorAll('.spot-card').forEach(function(card) { card.classList.remove('active'); });
+        var targetCard = document.querySelector('[data-spot="' + key + '"]');
+        if (targetCard) {
+            targetCard.classList.add('active');
+            targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }
+
+    function focusDay(dayIndex) {
+        if (!map) return;
+        var daySpots = Object.keys(spotData).filter(function(k) { return spotData[k].day === dayIndex; });
+        if (daySpots.length === 0) return;
+        // 跨城天自动切到主要区域
+        var firstRegion = spotData[daySpots[0]].region;
+        if (firstRegion !== currentRegion) showRegion(firstRegion);
+        var positions = daySpots
+            .filter(function(k) { return spotData[k].region === currentRegion; })
+            .map(function(k) { return [spotData[k].lng, spotData[k].lat]; });
+        if (positions.length > 0) map.setFitView(positions, false, [80, 80, 80, 80]);
+    }
+
+    function scrollToDay(day) {
+        var el = document.getElementById('day' + day);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // 飘雪动画
+    function createSnowflakes() {
+        var hero = document.querySelector('.hero');
+        var flakes = ['❄', '❅', '❆', '✦'];
+        for (var i = 0; i < 15; i++) {
+            var s = document.createElement('span');
+            s.className = 'snowflake';
+            s.textContent = flakes[Math.floor(Math.random() * flakes.length)];
+            s.style.left = Math.random() * 100 + '%';
+            s.style.animationDuration = (6 + Math.random() * 8) + 's';
+            s.style.animationDelay = (Math.random() * 8) + 's';
+            s.style.fontSize = (0.8 + Math.random() * 1.2) + 'rem';
+            hero.appendChild(s);
+        }
+    }
+
+    window.onload = function() {
+        createSnowflakes();
+        var script = document.createElement('script');
+        script.src = 'https://webapi.amap.com/maps?v=2.0&key=8b847386f729d22221c9fbb1c64a056b&callback=initMap';
+        script.onerror = function() {
+            document.getElementById('map').innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#94a3b8;flex-direction:column;gap:12px;"><span style="font-size:3rem;">🗺️</span><span>请替换高德地图 API Key</span><span style="font-size:0.8rem;">将 YOUR_AMAP_KEY 替换为您的key</span></div>';
+        };
+        document.head.appendChild(script);
+    };
+</script>
+</body>
+</html>
